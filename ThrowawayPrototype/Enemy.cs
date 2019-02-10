@@ -15,7 +15,7 @@ public class Enemy : MonoBehaviour
         rb2D = GetComponent<Rigidbody2D>();
     }
 
-    void Move (int xDir, int yDir)
+    IEnumerator Move (int xDir, int yDir)
     {
         //Store start position to move from, based on objects current transform position.
         Vector3 start = transform.position;
@@ -23,19 +23,19 @@ public class Enemy : MonoBehaviour
         // Calculate end position based on the direction parameters passed in when calling Move.
         Vector3 end = start + new Vector3(xDir, yDir);
 
-        float distanceRemaining = (transform.position - end).magnitude;
+        float distanceRemaining = (transform.position - end).sqrMagnitude;
 
         while (distanceRemaining > float.Epsilon)
         {
-            Vector3 newPostion = Vector3.MoveTowards(rb2D.position, end, Time.deltaTime/moveTime);
+            Vector3 newPostion = Vector3.MoveTowards(rb2D.position, end, Time.deltaTime / moveTime);
 
             rb2D.MovePosition(newPostion);
 
             //Recalculate the remaining distance after moving.
-            distanceRemaining = (transform.position - end).magnitude;
+            distanceRemaining = (transform.position - end).sqrMagnitude;
 
-            
-            
+
+            yield return null;
         }
 
     }
@@ -43,14 +43,15 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(up)
+        if (up)
         {
             Move(0, 5);
-        } else
+        }
+        else
         {
             Move(0, -5);
         }
-
+        up = !up;
     }
 
 }
