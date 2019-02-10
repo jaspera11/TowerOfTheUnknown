@@ -10,7 +10,7 @@ public class Player_Move_Iso : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        upDirection = new Vector3(0f, 0f, 1f);
+        upDirection = new Vector3(-1f, 0f, 0f);
         rightDirection = Quaternion.Euler(new Vector3(0, 90, 0)) * upDirection;
     }
 
