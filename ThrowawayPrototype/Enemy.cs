@@ -45,11 +45,11 @@ public class Enemy : MonoBehaviour
     {
         if (up)
         {
-            Move(0, 5);
+            Move(2, 1);
         }
         else
         {
-            Move(0, -5);
+            Move(-2, -1);
         }
         up = !up;
     }
