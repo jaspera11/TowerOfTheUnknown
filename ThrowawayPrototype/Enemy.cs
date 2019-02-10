@@ -1,3 +1,5 @@
+//Code took inspiration from Unity 2D Roguelike tutorial: https://unity3d.com/learn/tutorials/s/2d-roguelike-tutorial
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
