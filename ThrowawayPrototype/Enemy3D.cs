@@ -1,4 +1,6 @@
-﻿using System.Collections;
+//Outdated, do not use
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
