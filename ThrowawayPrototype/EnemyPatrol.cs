@@ -1,60 +1,67 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// © 2017 TheFlyingKeyboard and released under MIT License
-// theflyingkeyboard.net
+//Code inspired from provided CubeWorld 3D Sandbox game
 //Moves object between two points
 public class EnemyPatrol : MonoBehaviour
 {
+    //Fields for user in engine
     [SerializeField] public float moveSpeed;
     [SerializeField] public GameObject pointA;
     [SerializeField] public GameObject pointB;
     [SerializeField] private Transform enemyObject;
 
-    private bool reverseMove = false;
-    private float startTime;
-    private float journeyLength;
-    private float distCovered;
-    private float fracJourney;
+    //Other member variables
+    private bool reverse = false;
+    private float iTime;
+    private float totalDist;
+    private float covDist;
+    private float journeyProg;
 
     void Start()
     {
-        startTime = Time.time;
+        iTime = Time.time;
         
         //objectToUse = transform;
         
-        journeyLength = Vector3.Distance(pointA.transform.position, pointB.transform.position);
+        totalDist = Vector3.Distance(pointA.transform.position, pointB.transform.position);
     }
 
     
 
     void Update()
     {
-        distCovered = (Time.time - startTime) * moveSpeed;
-        fracJourney = distCovered / journeyLength;
+        //Distance from start to present
+        covDist = (Time.time - iTime) * moveSpeed;
+        //Fractional progress towards destination
+        journeyProg = covDist / totalDist;
 
-        if (reverseMove)
+        if (reverse)
         {
-            enemyObject.position = Vector3.Lerp(pointB.transform.position, pointA.transform.position, fracJourney);
+            //Move towards B
+            enemyObject.position = Vector3.Lerp(pointB.transform.position, pointA.transform.position, journeyProg);
         }
         else
         {
-            enemyObject.position = Vector3.Lerp(pointA.transform.position, pointB.transform.position, fracJourney);
+            //Move towards A
+            enemyObject.position = Vector3.Lerp(pointA.transform.position, pointB.transform.position, journeyProg);
         }
 
         //Change direction when the enemy reaches a point
         if ((Vector3.Distance(enemyObject.position, pointB.transform.position) == 0.0f || Vector3.Distance(enemyObject.position, pointA.transform.position) == 0.0f))
         {
-            if (reverseMove)
+            if (reverse)
             {
-                reverseMove = false;
+                reverse = false;
             }
             else
             {
-                reverseMove = true;
+                reverse = true;
             }
-            startTime = Time.time;
+
+            //New initial time for new destination
+            iTime = Time.time;
         }
     }
 }
