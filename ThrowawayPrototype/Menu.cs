@@ -6,7 +6,8 @@ public class Menu : MonoBehaviour
 {
     [SerializeField] public GameObject menu;
 
-    [SerializeField] private bool menuOn = false;
+    private bool menuOn = false;
+    private bool statsOn = false;
     //private Rect rectL;
     //private GUIContent stats;
 
@@ -16,34 +17,37 @@ public class Menu : MonoBehaviour
         
     }
 
-    //void showMenu()
+    //void showStats()
     //{
-    //    menuOn = !menuOn;
+    //    statsOn = !statsOn;
 
-    //    if(menuOn)
+    //    if (statsOn)
     //    {
 
-    //    } else
+    //    }
+    //    else
     //    {
-            
+
     //    }
     //}
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown("enter"))
+        if (Input.GetKeyDown("p"))
         {
             menuOn = !menuOn;
         }
-
+        
         //Show menu
         if(menuOn)
         {
             menu.SetActive(true);
+            Time.timeScale = 0f;
         } else
         {
             menu.SetActive(false);
+            Time.timeScale = 1f;
         }
     }
 }

@@ -1,53 +1,32 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
-public class Menu : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
-    [SerializeField] public GameObject menu;
-
-    private bool menuOn = false;
-    private bool statsOn = false;
-    //private Rect rectL;
-    //private GUIContent stats;
-
+    private Rigidbody rb;
+    private BoxCollider boxCollider;
     // Start is called before the first frame update
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody>();
+        boxCollider = GetComponent<BoxCollider>();
+        boxCollider.isTrigger = true;
     }
 
-    //void showStats()
-    //{
-    //    statsOn = !statsOn;
-
-    //    if (statsOn)
-    //    {
-
-    //    }
-    //    else
-    //    {
-
-    //    }
-    //}
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.name == "Player")
+        {
+            //Load Battle scene when enemy encounters player.  Index may need to be edited
+            SceneManager.LoadScene(1);
+        }
+    }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown("p"))
-        {
-            menuOn = !menuOn;
-        }
         
-        //Show menu
-        if(menuOn)
-        {
-            menu.SetActive(true);
-            Time.timeScale = 0f;
-        } else
-        {
-            menu.SetActive(false);
-            Time.timeScale = 1f;
-        }
     }
 }
