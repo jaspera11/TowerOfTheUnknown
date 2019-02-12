@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ShowOnClick : MonoBehaviour
 {
-    public bool show = false;
+    //public bool show = false;
     //[SerializeField] public GameObject item;
 
     // Start is called before the first frame update
@@ -15,12 +15,12 @@ public class ShowOnClick : MonoBehaviour
 
     public void ShowItem(GameObject item)
     {
-        show = !show;
+        //show = !show;
         //Debug.Log("showItem called\n");
-        if (show)
+        if (!item.activeSelf)
         {
             item.SetActive(true);
-            Debug.Log("Showing Text\n");
+            //Debug.Log("Showing Text\n");
         }
         else
         {
