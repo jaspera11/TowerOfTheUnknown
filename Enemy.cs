@@ -17,7 +17,7 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.name == "Player")
+        if (other.tag == "Player")
         {
             //Load Battle scene when enemy encounters player.  Index may need to be edited
             SceneManager.LoadScene(1);
