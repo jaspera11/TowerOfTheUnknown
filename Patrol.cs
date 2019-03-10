@@ -1,4 +1,6 @@
 ﻿// Patrol.cs
+//Code inspired by patrol code in Unity Documentation: https://docs.unity3d.com/Manual/nav-AgentPatrol.html
+
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
