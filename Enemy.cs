@@ -8,6 +8,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] Transform[] points;
+    [SerializeField] int battleScene = 1;
     private Rigidbody rb;
     private BoxCollider boxCollider;
     // Start is called before the first frame update
@@ -35,7 +36,7 @@ public class Enemy : MonoBehaviour
         if (other.tag == "Player")
         {
             //Load Battle scene when enemy encounters player.  Index may need to be edited
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(battleScene);
         }
     }
 
