@@ -55,7 +55,7 @@ public class PlayerPhaseState : MonoBehaviour
         if (CombatStateMachine.GetComponent<CombatStateM>().currState == CombatStateM.CombatState.PlayerPhase)
         {
             HealthText.text = "Heal x" + (Inventory.GetComponent<Inventory>().heal);
-            StaminaText.text = "Energy x" + Inventory.GetComponent<Inventory>().energy;
+            StaminaText.text = "Energy x" + (Inventory.GetComponent<Inventory>().energy);
             ItemList.SetActive(true);
         }
     }
