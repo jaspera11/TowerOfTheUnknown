@@ -16,12 +16,6 @@ namespace BT
             m_nodes = nodes;
         }
 
-        public If(Func<int, bool> f, List<Node> nodes)
-        {
-            m_f = f;
-            m_nodes = nodes;
-        }
-
         public override NodeStates Evaluate()
         {
             if (m_f())
