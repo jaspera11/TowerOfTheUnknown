@@ -6,12 +6,9 @@ namespace BT
 {
     public class Selector : Node
     {
-        /** The child nodes for this selector */
+        //Children nodes
         protected List<Node> m_nodes = new List<Node>();
 
-
-        /** The constructor requires a lsit of child nodes to be  
-         * passed in*/
         public Selector(List<Node> nodes)
         {
             m_nodes = nodes;

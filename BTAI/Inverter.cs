@@ -6,7 +6,7 @@ namespace BT
 {
     public class Inverter : Node
     {
-        /* Child node to evaluate */
+        //Child node
         private Node m_node;
 
         public Node node
@@ -14,8 +14,6 @@ namespace BT
             get { return m_node; }
         }
 
-        /* The constructor requires the child node that this inverter decorator 
-         * wraps*/
         public Inverter(Node node)
         {
             m_node = node;

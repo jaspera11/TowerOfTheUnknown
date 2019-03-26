@@ -1,7 +1,7 @@
-﻿using System.Collections;
+﻿//Some code in tree inspired by tutorial at: https://hub.packtpub.com/building-your-own-basic-behavior-tree-tutorial/
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 
 namespace BT
 {

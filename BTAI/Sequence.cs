@@ -6,10 +6,10 @@ namespace BT
 {
     public class Sequence : Node
     {
-        /** Children nodes that belong to this sequence */
+        //List of children
         private List<Node> m_nodes = new List<Node>();
 
-        /** Must provide an initial set of children nodes to work */
+       
         public Sequence(List<Node> nodes)
         {
             m_nodes = nodes;

@@ -5,26 +5,24 @@ using UnityEngine;
 
 namespace BT
 {
-    public class If : Node
+    public class IfInt : Node
     {
-        private Func<bool> m_f;
+        private Func<int, bool> m_f;
         protected List<Node> m_nodes = new List<Node>();
+        private int m_arg;
 
-        public If(Func<bool> f, List<Node> nodes)
+        
+
+        public IfInt(Func<int, bool> f, int arg, List<Node> nodes)
         {
             m_f = f;
             m_nodes = nodes;
-        }
-
-        public If(Func<int, bool> f, List<Node> nodes)
-        {
-            m_f = f;
-            m_nodes = nodes;
+            m_arg = arg;
         }
 
         public override NodeStates Evaluate()
         {
-            if (m_f())
+            if (m_f(m_arg))
             {
                 foreach (Node node in m_nodes)
                 {
