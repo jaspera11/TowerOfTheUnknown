@@ -56,13 +56,13 @@ public class CharController : MonoBehaviour
 
         if ((Input.GetKeyDown("left") || Input.GetKeyDown("a")) && facingRight)
         {
-            move.rotation = Quaternion.Euler(0, 180, 0);
+            move.rotation = Quaternion.Euler(0, 90, 0);
             facingRight = false;
         }
 
         if ((Input.GetKeyDown("right") || Input.GetKeyDown("d")) && !facingRight)
         {
-            move.rotation = Quaternion.Euler(0, 180, 0);
+            move.rotation = Quaternion.Euler(0, 270, 0);
             facingRight = true;
         }
     }
