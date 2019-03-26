@@ -13,6 +13,7 @@ public class CharController : MonoBehaviour
     private Transform move;
     private Transform obj;
     private Rigidbody m_rigidbody;
+    private bool facingRight;
     
     //private Transform player;
 
@@ -26,6 +27,7 @@ public class CharController : MonoBehaviour
         xdir = Quaternion.Euler(new Vector3(0, 90, 0)) * ydir; // set the right-facing vector to be facing right relative to the camera's forward vector
         m_rigidbody = GetComponent<Rigidbody>();
         m_rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+        facingRight = true;
 
         move = transform;
 
@@ -51,14 +53,28 @@ public class CharController : MonoBehaviour
             playerCon = true;
             move = transform;
         }
+
+        if ((Input.GetKeyDown("left") || Input.GetKeyDown("a")) && facingRight)
+        {
+            move.rotation = Quaternion.Euler(0, 180, 0);
+            facingRight = false;
+        }
+
+        if ((Input.GetKeyDown("right") || Input.GetKeyDown("d")) && !facingRight)
+        {
+            move.rotation = Quaternion.Euler(0, 180, 0);
+            facingRight = true;
+        }
     }
 
     void Move()
     {
-        Vector3 dir = new Vector3(Input.GetAxis("HorizontalKey"), 0, Input.GetAxis("VerticalKey")); // setup a direction Vector based on keyboard input. GetAxis returns a value between -1.0 and 1.0. If the A key is pressed, GetAxis(HorizontalKey) will return -1.0. If D is pressed, it will return 1.0
-        
+        //Vector3 dir = new Vector3(Input.GetAxis("HorizontalKey"), 0, Input.GetAxis("VerticalKey")); // setup a direction Vector based on keyboard input. GetAxis returns a value between -1.0 and 1.0. If the A key is pressed, GetAxis(HorizontalKey) will return -1.0. If D is pressed, it will return 1.0
+        Vector3 dir = new Vector3(-1 * Input.GetAxis("VerticalKey"), 0, Input.GetAxis("HorizontalKey"));
+
         float facing = Camera.main.transform.eulerAngles.y;
         Vector3 dirCam = Quaternion.Euler(0, facing, 0) * dir;
+        
         //xdir = Quaternion.Euler(new Vector3(0, 90, 0)) * ydir;
         //Vector3 xmov = xdir * speed * Time.deltaTime * Input.GetAxis("HorizontalKey"); // Our right movement is based on the right vector, movement speed, and our GetAxis command. We multiply by Time.deltaTime to make the movement smooth.
         //Vector3 ymov = ydir * speed * Time.deltaTime * Input.GetAxis("VerticalKey"); // Up movement uses the forward vector, movement speed, and the vertical axis inputs.
@@ -70,6 +86,8 @@ public class CharController : MonoBehaviour
         //Vector3 ymov = dir.y * speed * Time.deltaTime * Input.GetAxis("VerticalKey");
         //move.position += xmov; // move our transform's position right/left
         //move.position += ymov; // Move our transform's position up/down
-        move.position += dirCam * speed * Time.deltaTime;
+
+        move.position += dir * speed * Time.deltaTime;
+        //using dir not dirCam in project rn
      }
 }
