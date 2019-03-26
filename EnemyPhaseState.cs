@@ -58,9 +58,9 @@ namespace Combat
             EnemyStats.GetComponent<UnitStats>().stamina -= 10;
         }
 
-        public bool enoughSP()
+        public bool enoughSP(int n)
         {
-            if (EnemyStats.GetComponent<UnitStats>().stamina > 10)
+            if (EnemyStats.GetComponent<UnitStats>().stamina > n)
             {
                 return true;
             } else
@@ -79,7 +79,7 @@ namespace Combat
             level3_1.Add(new Call(debuffDefense));
             level3_2.Add(new Call(shoot));
             level2.Add(new If(playerBuffedDefense, level3_1));
-            level2.Add(new If(enoughSP, level3_2));
+            level2.Add(new IfInt(enoughSP, 10, level3_2));
             RandomSelector Root = new RandomSelector(3, level2, rootWeights);
             /*Current implementation: First check if player buffed defense.  If yes, debuff defense defense.  If no, attack
             */
