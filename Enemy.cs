@@ -1,15 +1,16 @@
-﻿//Some code inspired by patrol code in Unity Documentation: https://docs.unity3d.com/Manual/nav-AgentPatrol.html
+﻿// Some code inspired by patrol code in Unity Documentation: https://docs.unity3d.com/Manual/nav-AgentPatrol.html
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.AI;
 using UnityEngine;
 
+// Attach to enemy sprite
 public class Enemy : MonoBehaviour
 {
     [SerializeField] Transform[] points;
     [SerializeField] int battleScene = 1;
-    private Rigidbody rb;
+    // private Rigidbody rb;
     private BoxCollider boxCollider;
     // Start is called before the first frame update
     private int destPoint = 0;
@@ -17,7 +18,7 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        // rb = GetComponent<Rigidbody>();
         boxCollider = GetComponent<BoxCollider>();
         boxCollider.isTrigger = true;
 
@@ -35,8 +36,9 @@ public class Enemy : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            //Load Battle scene when enemy encounters player.  Index may need to be edited
-            SceneManager.LoadScene(battleScene);
+            PlayerPrefab.gameData.prevSceneIndex = SceneManager.GetActiveScene().buildIndex;    // Saves the previous scene
+            PlayerPrefab.gameData.playerLocation = other.transform;                             // Saves player position in overworld
+            SceneManager.LoadScene(battleScene);                                                // Load battle scene
         }
     }
 

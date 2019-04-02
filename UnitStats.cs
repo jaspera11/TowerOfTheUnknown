@@ -2,52 +2,50 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Attach to whatever unit you want
-
+// For enemy units (attach to children objects of enemy prefab)
 public class UnitStats : MonoBehaviour
 {
-    public int level;
-    public int health;
-    public int stamina;
-    public int attack;
-    public int defense;
-    public int speed;
-    public int skill;
-    public int luck;
-    public int experience;
-    private int maxExperience;
-    private int maxLevel;
+    public string charName;         // Character's name (unique)
+    public int level = 1;           // Current level
+    public List<Skill> skillList;   // List of possible skills
+    public float health;            // Current health
+    public float maxHealth;         // Maximum health
+    public float stamina;           // Current stamina
+    public float maxStamina;        // Maximum stamina
+    public float attack;            // Attack stat (affects damage)
+    public float defense;           // Defense stat (affects damage)
+    public float speed;             // Speed stat (affects number of skills in currSkills)
+    public float luck;              // Luck stat (affects critical hit chance)
+    public string currOption;       // Current option (Attack, Skills, Item, Flee)
+    public Stack<Skill> currSkills; // Current skill(s) for that turn (multiple can be chained together)
+    public UnitStats currEnemy;     // Current enemy that this unit is targeting
 
-    private void Start()
+    // Generic function that destroys all objects by a certain tag
+    public static void DestroyByTag(string tag)
     {
-        level = 1;
-        health = 200;
-        stamina = 50;
-        attack = 10;
-        defense = 10;
-        speed = 10;
-        skill = 10;
-        luck = 10;
-        experience = 0;
-        maxExperience = 100;
-        maxLevel = 10;
-    }
-
-    private void levelUp()
-    {
-        if (level == maxLevel) return;
-        if (experience >= maxExperience)
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag(tag))
         {
-            experience -= maxExperience;
-            maxExperience *= 2;
-            level++;
-            health += 30;
-            stamina += 15;
-            attack += 10;
-            defense += 10;
-            speed += 10;
-            skill += 5;
-            luck += 5;
+            Destroy(obj);
         }
+    }
+}
+
+// Parameters for skills
+[System.Serializable]
+public struct Skill
+{
+    public string name;
+    public string type;
+    public int power; // optional for non-damaging moves
+    public int SPCost;
+    public int skillReq;
+
+    public Skill(string name, string type, int power, int SPCost, int skillReq)
+    {
+        this.name = name;
+        this.type = type;
+        this.power = power;
+        this.SPCost = SPCost;
+        this.skillReq = skillReq;
     }
 }
