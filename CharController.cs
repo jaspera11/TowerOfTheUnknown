@@ -1,5 +1,4 @@
-﻿﻿// Some code inspired by this tutorial on an isometric environment
-// https://www.studica.com/blog/isometric-camera-unity
+﻿﻿
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
