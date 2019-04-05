@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BT
-{
+//namespace BT
+//{
     [System.Serializable]
     public abstract class Node
     {
@@ -32,4 +32,4 @@ namespace BT
         public abstract NodeStates Evaluate();
 
     }
-}
+//}

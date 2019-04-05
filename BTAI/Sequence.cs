@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BT
-{
+//namespace BT
+//{
     public class Sequence : Node
     {
         //List of children
@@ -42,4 +42,4 @@ namespace BT
             return m_nodeState;
         }
     }
-}
+//}

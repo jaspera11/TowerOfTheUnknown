@@ -4,8 +4,8 @@ using UnityEngine;
 using System;
 using System.Linq;
 
-namespace BT
-{
+//namespace BT
+//{
     public class Call : Node
     {
         private Action m_f;
@@ -23,4 +23,4 @@ namespace BT
         }
 
     }
-}
+//}

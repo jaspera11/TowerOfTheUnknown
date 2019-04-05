@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BT
-{
+//namespace BT
+//{
     public class Selector : Node
     {
         //Children nodes
@@ -39,4 +39,4 @@ namespace BT
             return m_nodeState;
         }
     }
-}
+//}

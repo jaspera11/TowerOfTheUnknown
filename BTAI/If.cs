@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 
-namespace BT
-{
+//namespace BT
+//{
     public class If : Node
     {
         private Func<bool> m_f;
@@ -46,4 +46,4 @@ namespace BT
             }
         }
     }
-}
+//}

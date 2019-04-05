@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BT
-{
+//namespace BT
+//{
     public class RandomSelector : Node
     {
         protected List<Node> m_nodes = new List<Node>();
@@ -66,5 +66,5 @@ namespace BT
             return m_nodeState;
         }
     }
-}
+//}
 

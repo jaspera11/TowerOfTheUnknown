@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BT
-{
+//namespace BT
+//{
     public class Inverter : Node
     {
         //Child node
@@ -40,4 +40,4 @@ namespace BT
             return m_nodeState;
         }
     }
-}
+//}
