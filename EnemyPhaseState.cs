@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using BT;
+//using BT;
 
-namespace Combat
-{
+//namespace Combat
+//{
+    [System.Serializable]
     public class EnemyPhaseState : MonoBehaviour
     {
         public GameObject SkillsList;
@@ -19,7 +20,6 @@ namespace Combat
         // Start is called before the first frame update
         void Start()
         {
-            StatusWindowText.text = "The Enemy is Contemplating...";
             HealthText.text = "";
             StaminaText.text = "";
         }
@@ -71,6 +71,8 @@ namespace Combat
 
         public void chooseOption()
         {
+            StatusWindowText.text = "The Enemy is Contemplating...";
+
             int[] rootWeights = { 40, 40, 20 };
             List<Node> level2 = new List<Node>();
             List<Node> level3_1 = new List<Node>();
@@ -112,4 +114,4 @@ namespace Combat
 
         }
     }
-}
+//}
