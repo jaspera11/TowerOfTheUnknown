@@ -16,6 +16,8 @@ public class Enemy : MonoBehaviour
     private int destPoint = 0;
     private NavMeshAgent agent;
     private Rigidbody m_rigidbody;
+    private bool facingRight;
+    private bool A;
 
     void Start()
     {
@@ -32,6 +34,8 @@ public class Enemy : MonoBehaviour
         // approaches a destination point).
         agent.autoBraking = false;
 
+        facingRight = true;
+        
         GotoNextPoint();
     }
 
@@ -64,5 +68,22 @@ public class Enemy : MonoBehaviour
     {
         if (!agent.pathPending && agent.remainingDistance < 0.5f)
             GotoNextPoint();
+            
+        if(A)
+            pointA = transform.position;
+        else
+            pointB = transform.position;
+
+        A = !A;
+
+        if (pointA.x - pointB.x > 0)
+        {
+            facingRight = true;
+            transform.rotation = Quaternion.Euler(0, 270, 0);
+        } else
+        {
+            transform.rotation = Quaternion.Euler(0, 90, 0);
+            facingRight = false;
+        }
     }
 }
