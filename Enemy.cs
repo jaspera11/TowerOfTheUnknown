@@ -15,9 +15,12 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     private int destPoint = 0;
     private NavMeshAgent agent;
+    private Rigidbody m_rigidbody;
 
     void Start()
     {
+        m_rigidbody = GetComponent<Rigidbody>();
+        m_rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
         // rb = GetComponent<Rigidbody>();
         boxCollider = GetComponent<BoxCollider>();
         boxCollider.isTrigger = true;
