@@ -22,8 +22,8 @@ public class CombatStateM : MonoBehaviour
     public enum CombatState
     {
         PlayerPhase,
-        //Player2Phase,
-        //Player3Phase,
+        Player2Phase,
+        Player3Phase,
         PlayerCombat,
         EnemyPhase,
         Enemy2Phase,
@@ -41,6 +41,7 @@ public class CombatStateM : MonoBehaviour
         PlayerStats.GetComponent<UnitStats>().stamina = PlayerStats.GetComponent<UnitStats>().maxstamina;
         EnemyStats.GetComponent<UnitStats>().health = EnemyStats.GetComponent<UnitStats>().maxhealth;
         EnemyStats.GetComponent<UnitStats>().stamina = EnemyStats.GetComponent<UnitStats>().maxstamina;
+        
         Player1HP.text = "HP: " + PlayerStats.GetComponent<UnitStats>().health  + "/" + PlayerStats.GetComponent<UnitStats>().maxhealth ;
         Player1SP.text = "SP: " + PlayerStats.GetComponent<UnitStats>().stamina + "/" + PlayerStats.GetComponent<UnitStats>().maxstamina;
         Enemy1HP.text = "HP: " + EnemyStats.GetComponent<UnitStats>().health + "/" + EnemyStats.GetComponent<UnitStats>().maxhealth;
@@ -57,11 +58,12 @@ public class CombatStateM : MonoBehaviour
         switch (currState)
         {
             case (CombatState.PlayerPhase):
-                
+
                 break;
             case (CombatState.PlayerCombat):
                 //resulting damage and statuses. Message of actions taken. Click to move on'
                 //calculateDamage()
+
                 battleDmg = calculateDamage(PlayerStats.GetComponent<UnitStats>().attack, EnemyStats.GetComponent<UnitStats>().defense, movePower, PlayerStats.GetComponent<UnitStats>().luck);
                 if (battleDmg >= EnemyStats.GetComponent<UnitStats>().health)
                 {
@@ -83,6 +85,7 @@ public class CombatStateM : MonoBehaviour
                 //resulting damage and statuses. Message of actions taken Click to move on
                 //calculateDamage();
                 //Temporary code throwout later
+
                 movePower = 10;
                 battleDmg = calculateDamage(EnemyStats.GetComponent<UnitStats>().attack, PlayerStats.GetComponent<UnitStats>().defense, movePower, EnemyStats.GetComponent<UnitStats>().luck);
                 if (PlayerStats.GetComponent<UnitStats>().defense > 10)
