@@ -5,14 +5,14 @@ using UnityEngine;
 // For player units (attach to children objects of player prefab)
 public class PlayerStats : UnitStats
 {
-    public List<string> inventory;  // List of items currently held
-    public string currItem;         // Item that player unit is about to use
+    public Item currItem;           // Item that player unit is about to use
     public bool itemUsed = false;   // True if item has been used for that turn
     private float experience = 0;   // Current experience for a level
     private float maxExp;           // Max experience for a level required to level up
     private int maxLevel = 10;      // Maximum level (cannot level up after)
     public int skill;               // Determines whether certain skills can be used
 
+    // Modifiable fields, determines stat gain upon leveling up
     [SerializeField] private const float hpUp = 30;
     [SerializeField] private const float spUp = 15;
     [SerializeField] private const float expMod = 2;
@@ -22,6 +22,7 @@ public class PlayerStats : UnitStats
     [SerializeField] private const int sklUp = 5;
     [SerializeField] private const float luckUp = 5;
 
+    // Adds experience to player unit, levels up there's enough experience
     public void AddExperience(float exp)
     {
         if (level == maxLevel)
@@ -45,26 +46,18 @@ public class PlayerStats : UnitStats
             luck += luckUp;
         }
     }
-    
-    /*
-    public PlayerStats() { }
+}
 
-    public PlayerStats(UnitStats stats)
+// Parameters for items
+[System.Serializable]
+public struct Item
+{
+    public string name;
+    public int count;
+
+    public Item(string name, int count)
     {
-        charName = stats.charName;
-        level = stats.level;
-        skillList = stats.skillList;
-        health = stats.health;
-        maxHealth = stats.maxHealth;
-        stamina = stats.stamina;
-        maxStamina = stats.maxStamina;
-        attack = stats.attack;
-        defense = stats.defense;
-        speed = stats.speed;
-        luck = stats.luck;
-        currOption = stats.currOption;
-        currSkills = stats.currSkills;
-        currEnemy = stats.currEnemy;
+        this.name = name;
+        this.count = count;
     }
-    */
 }

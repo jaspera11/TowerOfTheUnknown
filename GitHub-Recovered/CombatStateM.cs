@@ -8,10 +8,10 @@ using UnityEngine.UI;
 public class CombatStateM : MonoBehaviour
 {
     // [ Change some of these to public later... ]
-    private List<PlayerStats> playerStats;  // List of player data (each unit)
-    private List<UnitStats> enemyStats;     // List of enemy data (each unit)
+    public List<PlayerStats> playerStats;  // List of player data (each unit)
+    public List<UnitStats> enemyStats;     // List of enemy data (each unit)
     private List<float> expGain;            // List of experience gained by defeating each enemy
-    private enum CombatState                // Possible combat states
+    public enum CombatState                // Possible combat states
     {
         Init,
         PlayerPhase,
@@ -21,18 +21,54 @@ public class CombatStateM : MonoBehaviour
         Win,
         Defeat
     }
-    private CombatState currState;          // Current combat state
-    private int uIndex;                     // Keeps track of the current unit (for move selection and combat)
+    public CombatState currState;          // Current combat state
+    public int uIndex;                     // Keeps track of the current unit (for move selection and combat)
     private bool mainCharDefeated;          // True if the main character (playerStats[0]) is defeated
+    private bool fleeAttempted;             // True if a flee has been attempted for the battle
+
+    // UI elements
+    public List<GameObject> skillsPanels;
+    public GameObject itemPanel;
+    [SerializeField] private Text battleLog;
+    [SerializeField] private Button attackButton, skillsButton, itemButton, fleeButton;
+    [SerializeField] private List<Button> itemButtons;
+    [SerializeField] private List<List<Button>> skillButtons;
+
+    /*
+     * ~ Methods found ~
+     * private void Start(): Initializes variables
+     * private void Update(): Executes state machine once per frame
+     * IEnumerator PlayerPhase(): Executes PlayerPhase actions, yields for decision making
+     * private void PrePlayerPhaseState(): Variables set before PlayerPhase
+     * private void PostPlayerPhaseState(): Variables set after PlayerPhase
+     * private void UseSkill(UnitStats stats): Uses the top skill stored in currSkills
+     * private void UseItem(PlayerStats stats): Uses the item stored in currItem
+     * private void Damage(UnitStats stats, float movePower): Handles damage calculation, enemy death, and experience gain
+     * private void AttemptFlee(): Attempt to flee the battle
+     * private void Flee(): Handles player/enemy unit flee option
+     * private float ExpValue(UnitStats stats): Calculates the experience value of an enemy unit
+     * public void AddBattleLog(string textToAdd): Adds a message to the battle log
+     */
 
     // Initialize variables
     private void Start()
     {
         playerStats = GameObject.FindGameObjectWithTag("PlayerData").GetComponent<PlayerPrefab>().players;  // References the persistent list of player units
         enemyStats = GameObject.FindGameObjectWithTag("EnemyData").GetComponent<EnemyPrefab>().enemies;     // References the persistent list of enemy units
-        currState = CombatState.Init;       // Init is the first state
-        expGain = new List<float>();
+
+        // TODO: [ Create enemy sprite buttons dynamically ]
+
+        currState = CombatState.Init;                   // Init is the first state
+        expGain = new List<float>();                    // List of experience gained from defeating each enemy
         mainCharDefeated = false;
+        fleeAttempted = false;
+        battleLog.text = "\n\n\n\n\n\n\n";          // Ingenius way of creating a battle log (assumes ~7~ newline text limit)
+        // Sets skills/item panels to inactive upon battle start
+        foreach (GameObject panel in skillsPanels)
+        {
+            panel.SetActive(false);
+        }
+        itemPanel.SetActive(false);
         uIndex = 0;
 
         // Initializes player and enemy properties
@@ -40,10 +76,10 @@ public class CombatStateM : MonoBehaviour
         {
             player.stamina = player.maxStamina;         // Reset stamina after every battle
             player.itemUsed = false;                    // True if current player's item has been used (for that turn)
-            player.currItem = "";                       // String - name of the current item that player unit will use
+            player.currItem = new Item("", 0);          // String - name of the current item that player unit will use
             player.currOption = "";                     // String - name of the current option (Attack, Skills, Item, Flee)
             player.currSkills = new Stack<Skill>();     // Stack of Skills - skill(s) that player unit will use during combat phase
-            player.currEnemy = null;                    // UnitStats - reference to the enemy unit that player unit is targeting
+            player.currEnemy = enemyStats[0];                    // UnitStats - reference to the enemy unit that player unit is targeting
         }
         foreach (UnitStats enemy in enemyStats)
         {
@@ -51,11 +87,11 @@ public class CombatStateM : MonoBehaviour
             enemy.stamina = enemy.maxStamina;
             enemy.currOption = "";
             enemy.currSkills = new Stack<Skill>();
-            enemy.currEnemy = null;                     // UnitStats - reference to the player unit that enemy unit is targeting
+            enemy.currEnemy = playerStats[0];                     // UnitStats - reference to the player unit that enemy unit is targeting
             expGain.Add(ExpValue(enemy));               // Initializes list of experience values for each enemy unit
         }
 
-        // [Dialogue box...]
+        // [ Dialogue box... ]
         // Player1HP.text = "HP: " + PlayerStats.GetComponent<UnitStats>().health + "/" + PlayerStats.GetComponent<UnitStats>().maxhealth;
         // Player1SP.text = "SP: " + PlayerStats.GetComponent<UnitStats>().stamina + "/" + PlayerStats.GetComponent<UnitStats>().maxstamina;
         // Enemy1HP.text = "HP: " + EnemyStats.GetComponent<UnitStats>().health + "/" + EnemyStats.GetComponent<UnitStats>().maxhealth;
@@ -69,7 +105,8 @@ public class CombatStateM : MonoBehaviour
         {
             // Initial state
             case (CombatState.Init):
-                // [Some animation/initialization text]
+                AddBattleLog("The battle has begun!");
+                // TODO: [Some animation/initialization text]
                 currState = CombatState.PlayerPhase;
                 break;
 
@@ -78,23 +115,18 @@ public class CombatStateM : MonoBehaviour
                 // If all units have gone, move to combat scene
                 if (uIndex >= playerStats.Count)
                 {
-                    currState = CombatState.PlayerCombat;
-                    uIndex = 0;
+                    PostPlayerPhaseState(); // Sets variables after PlayerPhase state
                 }
                 // Else, make a decision for current player unit
                 else
                 {
-                    // [ Implement UI stuff, decision making (choose move, skill, enemy, etc.), use playerStats[uIndex] ]
-                    // [ itemUsed == true --> can't click on "Item" ]
-
-                    // [ If player's skill is less than skill's skill requirement --> can't click on that skill item ]
-                    // [ If player's stamina is less than SPCost --> can't click on that skill item ]
+                    StartCoroutine("PlayerPhase");
 
                     // If item chosen, use it, and then choose another option
                     if (playerStats[uIndex].currOption == "Item")
                     {
                         UseItem(playerStats[uIndex]);
-                        break;
+                        return;
                     }
                     playerStats[uIndex].itemUsed = false;   // Reverts itemUsed after turn ends
                     uIndex++;                               // Switches to next player
@@ -117,9 +149,6 @@ public class CombatStateM : MonoBehaviour
                         case "Attack":
                         case "Skills":
                             UseSkill(playerStats[uIndex]); // Use skills, damage enemies, gain exp if enemy defeated
-                            
-
-                            // [ Do animation ]
 
                             // If player unit has no more skills, continue to next player unit
                             if (playerStats[uIndex].currSkills.Count <= 0)
@@ -128,7 +157,8 @@ public class CombatStateM : MonoBehaviour
                             }
                             break;
                         case "Flee":
-                            Flee(); // If flee chosen, flee the battle
+                            if (fleeAttempted) break;   // If flee attempted before, cannot try again
+                            AttemptFlee();              // Attempt the flee
                             break;
                         default:
                             break;
@@ -152,7 +182,7 @@ public class CombatStateM : MonoBehaviour
                 // Else, make a decision for current enemy unit
                 else
                 {
-                    // [ Implement UI stuff, decision making (choose move, skill, target player, etc.), use enemyStats[uIndex] ]
+                    // TODO: [ Implement UI stuff, decision making (choose move, skill, target player, etc.), use enemyStats[uIndex] ]
                     uIndex++;
                 }
                 break;
@@ -162,8 +192,7 @@ public class CombatStateM : MonoBehaviour
                 // If all units have gone, it is the player's turn
                 if (uIndex >= enemyStats.Count)
                 {
-                    currState = CombatState.PlayerPhase;
-                    uIndex = 0;
+                    PrePlayerPhaseState();
                 }
                 // Else, execute the enemy unit's decision
                 else
@@ -173,8 +202,6 @@ public class CombatStateM : MonoBehaviour
                         case "Attack":
                         case "Skills":
                             UseSkill(enemyStats[uIndex]);   // Use skills, damage enemies, gain exp if enemy defeated
-
-                            // [ Do animation ]
 
                             // If enemy unit has no more skills, continue to next enemy unit
                             if (enemyStats[uIndex].currSkills.Count <= 0)
@@ -198,6 +225,9 @@ public class CombatStateM : MonoBehaviour
 
             // Occurs when all enemies defeated
             case (CombatState.Win):
+                // TODO: [ Do win animation ]
+                AddBattleLog("You win!");
+
                 // Reset variables
                 currState = CombatState.Init;
                 uIndex = 0;
@@ -206,17 +236,113 @@ public class CombatStateM : MonoBehaviour
                     player.stamina = player.maxStamina;
                 }
                 PlayerPrefab.gameData.isDeadEnemy[GameObject.FindGameObjectWithTag("EnemyData").name] = true;   // Enemy prefab object added to dead enemies list
+                Destroy(GameObject.FindGameObjectWithTag("EnemyData"));                                         // Destroys enemy prefab (stays dead)
                 SceneManager.LoadScene(PlayerPrefab.gameData.prevSceneIndex);                                   // Load previous scene
                 break;
 
             // Occurs when all players defeated and/or main character defeated
             case (CombatState.Defeat):
-                // [ Load game over screen - start over or from last save]
-                SceneManager.LoadScene(0);  // Game over scene
+                // TODO: [ Do defeat animation ]
+                // TODO: [ Load game over screen - start over or from last save]
+                AddBattleLog("You lose!");
+                Destroy(GameObject.FindGameObjectWithTag("EnemyData"));     // Destroys enemy prefab (comes back)
+                SceneManager.LoadScene(0);                                  // Game over scene
                 break;
             default:
                 break;
         }
+    }
+
+    /*
+     * -------------------------------------------------- METHODS ---------------------------------------------------------------
+     */
+
+    /*
+     * Handles UI elements (State machine --> UI) and other calculations for each player unit
+     * If player is still deciding, yield the CPU
+     */
+    IEnumerator PlayerPhase()
+    {
+        // TODO: [ Implement UI stuff, decision making (choose move, skill, enemy, etc.), use playerStats[uIndex] ]
+
+        PlayerStats player = playerStats[uIndex];
+
+        itemButton.interactable = (player.itemUsed) ? false : true;    // itemUsed == true --> can't click on "Item"
+
+        // If count of item is 0, can't click on that item
+        // Items in inventory must have same index as items in item button list!! -------------- fixable later?
+        for (int i = 0; i < itemButtons.Count; i++)
+        {
+            itemButtons[i].interactable = (PlayerPrefab.gameData.inventory[i].count > 0) ? true : false;
+        }
+
+        // If current player doesn't have the skill/stamina to use a skill, can't click on that skill
+        // Skills in each player's skill list must have same index as skills in skill button lists!! ------------- fixable later?
+        for (int i = 0; i < skillButtons.Count; i++)
+        {
+            bool isInteractable = (player.skill >= player.skillList[i].skillReq)
+                && (player.stamina >= player.skillList[i].SPCost);
+            skillButtons[uIndex][i].interactable = (isInteractable) ? true : false;
+        }
+        playerStats[uIndex].currEnemy = enemyStats[0];  // Default current enemy is the first enemy
+
+        // Calculate how many skills player can use
+        int chainLength = 1;
+        for (int i = PlayerPrefab.gameData.spdTH.Length - 1; i >= 0; i--)
+        {
+            if (player.speed < PlayerPrefab.gameData.spdTH[i] || player.skill < PlayerPrefab.gameData.sklTH[i])
+            {
+                continue;
+            }
+            chainLength++;
+        }
+
+        // Main boolean that checks if the player unit has completed their turn
+        bool deciding = (player.currOption.Length <= 0)
+                || (player.currOption == "Attack" && (player.currEnemy == null || player.currSkills.Count == 0))
+                || (player.currOption == "Skills" && (player.currEnemy == null || player.currSkills.Count < chainLength))
+                || (player.currOption == "Item" && player.currItem.name == "");
+        while (deciding)
+        {
+            yield return null;
+            deciding = (player.currOption.Length <= 0)
+                || (player.currOption == "Attack" && (player.currEnemy == null || player.currSkills.Count == 0))
+                || (player.currOption == "Skills" && (player.currEnemy == null || player.currSkills.Count < chainLength))
+                || (player.currOption == "Item" && player.currItem.name == "");
+        }
+
+        // Deactivates the skills/items panels for each player unit after their turn
+        foreach (GameObject panel in skillsPanels)
+        {
+            panel.SetActive(false);
+        }
+        itemPanel.SetActive(false);
+    }
+
+    // Executed before PlayerPhase state
+    private void PrePlayerPhaseState()
+    {
+        foreach (PlayerStats player in playerStats)
+        {
+            player.currItem = new Item("", 0);          // Item - current item that player will use
+            player.currOption = "";                     // String - name of the current option (Attack, Skills, Item, Flee)
+            player.currSkills = new Stack<Skill>();     // Stack of Skills - skill(s) that player unit will use during combat phase
+            player.currEnemy = null;                    // UnitStats - reference to the enemy unit that player unit is targeting
+        }
+        // Make buttons interactable (if flee has been attempted, make that uninteractable
+        attackButton.interactable = skillsButton.interactable = itemButton.interactable = true;
+        fleeButton.interactable = (fleeAttempted) ? false : true;
+        currState = CombatState.PlayerPhase;
+        uIndex = 0;
+    }
+
+    // Executed after PlayerPhase state
+    private void PostPlayerPhaseState()
+    {
+        // Make buttons uninteractable
+        attackButton.interactable = skillsButton.interactable = itemButton.interactable = fleeButton.interactable = false;
+        currState = CombatState.PlayerCombat;
+        uIndex = 0;
     }
 
     // Use the top skill in the currSkill stack and executes it
@@ -228,8 +354,8 @@ public class CombatStateM : MonoBehaviour
             return;
         }
 
-        // Get the top skill and remove it from the stack
-        Skill skill = stats.currSkills.Pop();
+        Skill skill = stats.currSkills.Pop();       // Get the top skill and remove it from the stack
+        stats.stamina -= skill.SPCost;              // Subtracts SPCost from unit's stamina
         switch (skill.type)
         {
             // If it's a damaging skill, damage (and possibly defeat) the opponent, gain experience
@@ -240,7 +366,12 @@ public class CombatStateM : MonoBehaviour
             case "Utility":
                 switch (skill.name)
                 {
-                    // [ Fill in cases as necessary for what to do for utility skills ]
+                    // TODO: [ Fill in cases as necessary for what to do for utility skills ]
+                    // [ Placeholder ]
+                    case "Barrier":
+                        playerStats[uIndex].defense *= 2;
+                        AddBattleLog(playerStats[uIndex].charName + "'s defense is doubled!");
+                        break;
                     default:
                         break;
                 }
@@ -249,39 +380,27 @@ public class CombatStateM : MonoBehaviour
                 break;
         }
 
-        // [ Animation for the skill ]
+        // TODO: [ Do skill animation ]
     }
 
     // Use the item in currItem
     private void UseItem(PlayerStats stats)
     {
-        // [ Fill in cases as necessary for what to do for each item ]
-        switch (stats.currItem)
+        // TODO: [ Fill in cases as necessary for what to do for each item ]
+        // TODO: [ Do animation for each item]
+        switch (stats.currItem.name)
         {
+            // [ Placeholder ]
+            case "Heal":
+                stats.health = stats.maxHealth;
+                AddBattleLog("You fully recovered health!");
+                break;
             default:
                 break;
         }
         stats.itemUsed = true;  // Player has used the item (cannot use it again until the next turn)
     }
 
-    // Handles player/enemy unit flee option
-    private void Flee()
-    {
-        // Reset variables
-        currState = CombatState.Init;
-        uIndex = 0;
-        foreach (PlayerStats player in playerStats)
-        {
-            player.stamina = player.maxStamina;
-        }
-        foreach (UnitStats enemy in enemyStats)
-        {
-            enemy.health = enemy.maxHealth;
-            enemy.stamina = enemy.maxStamina;
-        }
-        SceneManager.LoadScene(PlayerPrefab.gameData.prevSceneIndex);   // Load previous (non-battle) scene
-    }
-    
     /* 
      * Handles damage calculation.
      * If damage is higher than enemy health, remove enemy from list
@@ -293,19 +412,25 @@ public class CombatStateM : MonoBehaviour
         float defense = stats.currEnemy.defense;    // Current enemy defense
         float luck = stats.luck;                    // Current player luck
         float critChance = (Mathf.Log(luck + 100, 1.05f) + 1 - Mathf.Log(100, 1.05f)) / 100f;   // Chance of a critical hit
-        float critFactor = (Random.Range(0, 1) < critChance) ? 1.5f : 1f;                       // Multiplier (results from critical hit), 1.5x damage
-        float random = Random.Range(0, 1) / 10f + 0.95f;                                        // Varies damage calculation with random factor
+        float critFactor = (Random.Range(0f, 1f) < critChance) ? 1.5f : 1f;                     // Multiplier (results from critical hit), 1.5x damage
+        float random = Random.Range(0f, 1f) / 10f + 0.95f;                                      // Varies damage calculation with random factor
         int damage = (int)Mathf.Ceil(attack / defense * movePower * critFactor * random);       // Damage calculation
+
+        // TODO: [ Do damage animation ]
+        AddBattleLog(stats.currEnemy.charName + " took " + damage + " damage!");
+
         // If attack kills enemy, remove player/enemy from list
         if (damage >= stats.currEnemy.health)
         {
             stats.currEnemy.health = 0; // Health == 0 --> player/enemy is defeated
+            AddBattleLog(stats.currEnemy.charName + " was defeated!");
             // If it's the player's turn, remove the enemy and gain experience
             if (currState == CombatState.PlayerCombat)
             {
                 UnitStats enemy = stats.currEnemy;              // Gets the enemy unit
                 float exp = expGain[enemyStats.IndexOf(enemy)]; // Gets the enemy exp value from a list (calculated at beginning)
                 enemyStats.Remove(enemy);                       // Removes enemy unit from enemyStats list
+                AddBattleLog("Players gained " + exp + " experience!");
                 // Have (all) the players gain experience, level up if necessary
                 foreach (PlayerStats player in playerStats)
                 {
@@ -316,6 +441,7 @@ public class CombatStateM : MonoBehaviour
             else
             {
                 PlayerStats player = playerStats.Find(p => p.charName == stats.currEnemy.charName);
+                AddBattleLog(player.charName + " was defeated!");
                 // If the main character is defeated, you lose
                 if (playerStats.IndexOf(player) == 0)
                 {
@@ -334,133 +460,47 @@ public class CombatStateM : MonoBehaviour
         }
     }
 
+    // Attempt to flee the battle
+    private void AttemptFlee()
+    {
+        // If enemy is a boss, you can't run
+        float fleeChance = (GameObject.FindGameObjectWithTag("EnemyData").GetComponent<EnemyPrefab>().isBoss) ? 0f : (1f / 3f);
+        if (Random.Range(0f, 1f) < fleeChance) Flee(); // If flee chosen, flee the battle
+        fleeAttempted = true;
+    }
+
+    // Handles player/enemy unit flee option
+    private void Flee()
+    {
+        // TODO: [ Do flee animation ]
+        AddBattleLog("Player fled!");
+
+        // Reset variables
+        currState = CombatState.Init;
+        uIndex = 0;
+        foreach (PlayerStats player in playerStats)
+        {
+            player.stamina = player.maxStamina;
+        }
+        foreach (UnitStats enemy in enemyStats)
+        {
+            enemy.health = enemy.maxHealth;
+            enemy.stamina = enemy.maxStamina;
+        }
+        Destroy(GameObject.FindGameObjectWithTag("EnemyData"));
+        SceneManager.LoadScene(PlayerPrefab.gameData.prevSceneIndex);   // Load previous (non-battle) scene
+    }
+
     // Calculates the amount of experience the player(s) gain after defeating an enemy
     private float ExpValue(UnitStats stats)
     {
         return stats.level * 100f + stats.health + stats.stamina + stats.attack + stats.defense + stats.speed + stats.luck;
     }
-}
 
-// ----------------------------------------------------------------------------
-
-/*
-public GameObject PlayerStats;
-public GameObject EnemyStats;
-public Text StatusWindowText;
-public Text Player1HP;
-public Text Player1SP;
-public Text Enemy1HP;
-public Text Enemy1SP;
-public int movePower;
-public int battleDmg;
-public string Enemy1type;
-public string Enemy2type;
-public string Enemy3type;
-public enum CombatState
-{
-    PlayerPhase,
-    //Player2Phase,
-    //Player3Phase,
-    PlayerCombat,
-    EnemyPhase,
-    Enemy2Phase,
-    Enemy3Phase,
-    EnemyCombat,
-    Win,
-    Defeat
-}
-public CombatState currState;
-// Start is called before the first frame update
-void Start()
-{
-    currState = CombatState.PlayerPhase;
-    Enemy1type = EnemyStats.GetComponent<UnitStats>().entityType;
-    PlayerStats.GetComponent<UnitStats>().stamina = PlayerStats.GetComponent<UnitStats>().maxstamina;
-    EnemyStats.GetComponent<UnitStats>().health = EnemyStats.GetComponent<UnitStats>().maxhealth;
-    EnemyStats.GetComponent<UnitStats>().stamina = EnemyStats.GetComponent<UnitStats>().maxstamina;
-    Player1HP.text = "HP: " + PlayerStats.GetComponent<UnitStats>().health + "/" + PlayerStats.GetComponent<UnitStats>().maxhealth;
-    Player1SP.text = "SP: " + PlayerStats.GetComponent<UnitStats>().stamina + "/" + PlayerStats.GetComponent<UnitStats>().maxstamina;
-    Enemy1HP.text = "HP: " + EnemyStats.GetComponent<UnitStats>().health + "/" + EnemyStats.GetComponent<UnitStats>().maxhealth;
-    Enemy1SP.text = "SP: " + EnemyStats.GetComponent<UnitStats>().health + "/" + EnemyStats.GetComponent<UnitStats>().maxhealth;
-}
-
-// Update is called once per frame
-void Update()
-{
-    Player1SP.text = "SP: " + PlayerStats.GetComponent<UnitStats>().stamina + "/" + PlayerStats.GetComponent<UnitStats>().maxstamina;
-    Enemy1SP.text = "SP: " + EnemyStats.GetComponent<UnitStats>().stamina + "/" + EnemyStats.GetComponent<UnitStats>().maxstamina;
-    Player1HP.text = "HP: " + PlayerStats.GetComponent<UnitStats>().health + "/" + PlayerStats.GetComponent<UnitStats>().maxhealth;
-    Enemy1HP.text = "HP: " + EnemyStats.GetComponent<UnitStats>().health + "/" + EnemyStats.GetComponent<UnitStats>().maxhealth;
-    switch (currState)
+    // Adds a message to the main text battle log
+    public void AddBattleLog(string textToAdd)
     {
-        case (CombatState.PlayerPhase):
-
-            break;
-        case (CombatState.PlayerCombat):
-            //resulting damage and statuses. Message of actions taken. Click to move on'
-            //calculateDamage()
-            battleDmg = calculateDamage(PlayerStats.GetComponent<UnitStats>().attack, EnemyStats.GetComponent<UnitStats>().defense, movePower, PlayerStats.GetComponent<UnitStats>().luck);
-            if (battleDmg >= EnemyStats.GetComponent<UnitStats>().health)
-            {
-                EnemyStats.GetComponent<UnitStats>().health = 0;
-                currState = CombatState.Win;
-            }
-            else
-            {
-                EnemyStats.GetComponent<UnitStats>().health = EnemyStats.GetComponent<UnitStats>().health - battleDmg;
-                currState = CombatState.EnemyPhase;
-            }
-            break;
-        case (CombatState.EnemyPhase):
-            //criminalAI to determine enemy behavior
-
-            currState = CombatState.EnemyCombat;
-            break;
-        case (CombatState.EnemyCombat):
-            //resulting damage and statuses. Message of actions taken Click to move on
-            //calculateDamage();
-            //Temporary code throwout later
-            movePower = 10;
-            battleDmg = calculateDamage(EnemyStats.GetComponent<UnitStats>().attack, PlayerStats.GetComponent<UnitStats>().defense, movePower, EnemyStats.GetComponent<UnitStats>().luck);
-            if (PlayerStats.GetComponent<UnitStats>().defense > 10)
-            {
-                PlayerStats.GetComponent<UnitStats>().defense = PlayerStats.GetComponent<UnitStats>().defense / 2;
-                movePower = 0;
-            }
-            if (battleDmg >= PlayerStats.GetComponent<UnitStats>().health)
-            {
-                PlayerStats.GetComponent<UnitStats>().health = 0;
-                currState = CombatState.Defeat;
-
-                PlayerStats.GetComponent<UnitStats>().health = PlayerStats.GetComponent<UnitStats>().health - battleDmg;
-            }
-            else
-            {
-                PlayerStats.GetComponent<UnitStats>().health = PlayerStats.GetComponent<UnitStats>().health - battleDmg;
-                currState = CombatState.PlayerPhase;
-            }
-            break;
-        case (CombatState.Win):
-            //Win condition
-            PlayerStats.GetComponent<UnitStats>().experience = calculateExperience(EnemyStats.GetComponent<UnitStats>(), PlayerStats.GetComponent<UnitStats>().experience);
-            PlayerStats.GetComponent<UnitStats>().levelUp();
-            SceneManager.LoadScene(0);
-            break;
-        case (CombatState.Defeat):
-            //Loss condition
-            SceneManager.LoadScene(0);
-            break;
+        string text = battleLog.text;
+        battleLog.text = string.Concat(text.Remove(0, text.IndexOf("\n") + 1), textToAdd, "\n");
     }
 }
-private float calculateCrit(int luck)
-{
-    return (Mathf.Log(luck + 100, 1.05f) + 1 - Mathf.Log(100, 1.05f)) / 100f;
-}
-
-
-
-public int calculateExperience(UnitStats enemyStats, int oldExp)
-{
-    return oldExp + enemyStats.health + enemyStats.stamina + enemyStats.attack + enemyStats.defense + enemyStats.speed + enemyStats.luck;
-}
-*/
