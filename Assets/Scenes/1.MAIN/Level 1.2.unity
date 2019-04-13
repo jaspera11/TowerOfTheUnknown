@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.2329995, g: 0.28037107, b: 0.3470834, a: 1}
+  m_IndirectSpecularColor: {r: 0.2329993, g: 0.28037098, b: 0.34708297, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6025,7 +6025,7 @@ Transform:
   m_LocalScale: {x: 4.7271, y: 4.7271, z: 4.7271}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 22
+  m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1001 &410562552
 PrefabInstance:
@@ -6818,6 +6818,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: DialogueManager
       objectReference: {fileID: 0}
+    - target: {fileID: 3627287662503670810, guid: f1deb0e63dda4c84a894200932189416,
+        type: 3}
+      propertyPath: nameText
+      value: 
+      objectReference: {fileID: 1498433016}
+    - target: {fileID: 3627287662503670810, guid: f1deb0e63dda4c84a894200932189416,
+        type: 3}
+      propertyPath: dialogueText
+      value: 
+      objectReference: {fileID: 980047161}
+    - target: {fileID: 3627287662503670810, guid: f1deb0e63dda4c84a894200932189416,
+        type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 334056555}
     - target: {fileID: 3627287662503670811, guid: f1deb0e63dda4c84a894200932189416,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -6856,7 +6871,7 @@ PrefabInstance:
     - target: {fileID: 3627287662503670811, guid: f1deb0e63dda4c84a894200932189416,
         type: 3}
       propertyPath: m_RootOrder
-      value: 24
+      value: 26
       objectReference: {fileID: 0}
     - target: {fileID: 3627287662503670811, guid: f1deb0e63dda4c84a894200932189416,
         type: 3}
@@ -6873,21 +6888,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3627287662503670810, guid: f1deb0e63dda4c84a894200932189416,
-        type: 3}
-      propertyPath: nameText
-      value: 
-      objectReference: {fileID: 1498433016}
-    - target: {fileID: 3627287662503670810, guid: f1deb0e63dda4c84a894200932189416,
-        type: 3}
-      propertyPath: dialogueText
-      value: 
-      objectReference: {fileID: 980047161}
-    - target: {fileID: 3627287662503670810, guid: f1deb0e63dda4c84a894200932189416,
-        type: 3}
-      propertyPath: animator
-      value: 
-      objectReference: {fileID: 334056555}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f1deb0e63dda4c84a894200932189416, type: 3}
 --- !u!1001 &468456130
@@ -10485,7 +10485,7 @@ Transform:
   - {fileID: 1363196018}
   - {fileID: 868970451}
   m_Father: {fileID: 0}
-  m_RootOrder: 21
+  m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &745555425
 GameObject:
@@ -14395,18 +14395,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73230bef33f6978449ba9949abb03a83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  level: 1
-  health: 200
-  maxhealth: 200
-  stamina: 50
-  maxstamina: 50
-  attack: 10
-  defense: 10
-  speed: 10
-  skill: 10
-  luck: 10
-  experience: 10
-  entityType: 
 --- !u!1 &961441234
 GameObject:
   m_ObjectHideFlags: 0
@@ -14710,6 +14698,23 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dialogue
       objectReference: {fileID: 0}
+    - target: {fileID: 4809697854754771229, guid: 07fab29b53f74854ea4b24323ec872e4,
+        type: 3}
+      propertyPath: sentences.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4809697854754771229, guid: 07fab29b53f74854ea4b24323ec872e4,
+        type: 3}
+      propertyPath: d_name
+      value: Riddle 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4809697854754771229, guid: 07fab29b53f74854ea4b24323ec872e4,
+        type: 3}
+      propertyPath: sentences.Array.data[0]
+      value: 'Quesstion
+
+'
+      objectReference: {fileID: 0}
     - target: {fileID: 4809697854754771218, guid: 07fab29b53f74854ea4b24323ec872e4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -14748,7 +14753,7 @@ PrefabInstance:
     - target: {fileID: 4809697854754771218, guid: 07fab29b53f74854ea4b24323ec872e4,
         type: 3}
       propertyPath: m_RootOrder
-      value: 25
+      value: 27
       objectReference: {fileID: 0}
     - target: {fileID: 4809697854754771218, guid: 07fab29b53f74854ea4b24323ec872e4,
         type: 3}
@@ -14764,23 +14769,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4809697854754771229, guid: 07fab29b53f74854ea4b24323ec872e4,
-        type: 3}
-      propertyPath: sentences.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4809697854754771229, guid: 07fab29b53f74854ea4b24323ec872e4,
-        type: 3}
-      propertyPath: d_name
-      value: Riddle 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4809697854754771229, guid: 07fab29b53f74854ea4b24323ec872e4,
-        type: 3}
-      propertyPath: sentences.Array.data[0]
-      value: 'Quesstion
-
-'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 07fab29b53f74854ea4b24323ec872e4, type: 3}
@@ -24415,7 +24403,7 @@ PrefabInstance:
     - target: {fileID: 5436402658200134181, guid: c483a1896fc9b1540a56b5e2cbff8fbe,
         type: 3}
       propertyPath: m_RootOrder
-      value: 23
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 5436402658200134181, guid: c483a1896fc9b1540a56b5e2cbff8fbe,
         type: 3}
@@ -28959,6 +28947,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: playerCharacterFinal
+      objectReference: {fileID: 0}
+    - target: {fileID: 4410775034592281695, guid: 2455122bdf8474798b47cf24c6865253,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4410775034592281688, guid: 2455122bdf8474798b47cf24c6865253,
         type: 3}
