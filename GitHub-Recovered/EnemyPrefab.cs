@@ -7,6 +7,7 @@ public class EnemyPrefab : MonoBehaviour
 {
     // List of child enemies of this object
     public List<UnitStats> enemies;
+    public bool isBoss;
     
     void Start()
     {
