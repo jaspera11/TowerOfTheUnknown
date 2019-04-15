@@ -61,6 +61,18 @@ public class PlayerPhaseState : MonoBehaviour
         stateMachine.AddBattleLog(player.charName + " is primed to use skill " + skill.name + "!");
     }
 
+    public void SkillChain()
+    {
+        PlayerStats player = stateMachine.playerStats[stateMachine.uIndex];
+        if(player.currSkills.Count <= 0)
+        {
+            return;
+        } else
+        {
+            stateMachine.skillChainR = true;
+        }
+    }
+
     public void ItemButton()
     {
         PlayerStats player = stateMachine.playerStats[stateMachine.uIndex];

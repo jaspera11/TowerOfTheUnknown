@@ -4745,6 +4745,7 @@ MonoBehaviour:
   - {fileID: 545022491}
   currState: 0
   uIndex: 0
+  fleeAttempted: 0
   skillsPanels:
   - {fileID: 123792115}
   - {fileID: 1787060651}
@@ -5615,7 +5616,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemies:
   - {fileID: 2039484954}
-  isBoss: 0
+  isBoss: 1
 --- !u!4 &1021332537
 Transform:
   m_ObjectHideFlags: 0
