@@ -26,7 +26,7 @@ public class CombatStateM : MonoBehaviour
     public CombatState currState;          // Current combat state
     public int uIndex;                     // Keeps track of the current unit (for move selection and combat)
     private bool mainCharDefeated;          // True if the main character (playerStats[0]) is defeated
-    private bool fleeAttempted;             // True if a flee has been attempted for the battle
+    public bool fleeAttempted;             // True if a flee has been attempted for the battle
 
     // UI elements
     public List<GameObject> skillsPanels;
