@@ -4746,6 +4746,7 @@ MonoBehaviour:
   currState: 0
   uIndex: 0
   fleeAttempted: 0
+  skillChainR: 0
   skillsPanels:
   - {fileID: 123792115}
   - {fileID: 1787060651}
@@ -4756,6 +4757,7 @@ MonoBehaviour:
   skillsButton: {fileID: 248265135504480257}
   itemButton: {fileID: 1153338806138743441}
   fleeButton: {fileID: 248265134789975866}
+  skillChainButton: {fileID: 0}
   itemButtons: []
   skillButtons1: []
   skillButtons2: []
@@ -5616,7 +5618,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemies:
   - {fileID: 2039484954}
-  isBoss: 1
+  isBoss: 0
 --- !u!4 &1021332537
 Transform:
   m_ObjectHideFlags: 0
