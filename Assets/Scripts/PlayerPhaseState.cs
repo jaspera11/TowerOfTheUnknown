@@ -38,7 +38,7 @@ public class PlayerPhaseState : MonoBehaviour
         if (stateMachine.currState != CombatStateM.CombatState.PlayerPhase)
             return;
         player.currOption = "Attack";
-        stateMachine.AddBattleLog(player.charName + " performed Attack!");
+        stateMachine.AddBattleLog(player.charName + " is going to Attack!");
         player.currSkills.Push(new Skill("Attack", "Damage", attackPower, 0, 0));
     }
 
@@ -58,7 +58,7 @@ public class PlayerPhaseState : MonoBehaviour
         PlayerStats player = stateMachine.playerStats[stateMachine.uIndex];
         Skill skill = player.skillList[index];
         player.currSkills.Push(skill);
-        stateMachine.AddBattleLog(player.charName + " performed skill " + skill.name + "!");
+        stateMachine.AddBattleLog(player.charName + " is primed to use skill " + skill.name + "!");
     }
 
     public void ItemButton()
