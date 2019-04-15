@@ -1502,7 +1502,47 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   charName: 
   level: 1
-  skillList: []
+  skillList:
+  - name: Psy-Throw
+    type: Damage
+    power: 10
+    SPCost: 10
+    skillReq: 10
+  - name: Tear
+    type: Damage
+    power: 15
+    SPCost: 15
+    skillReq: 15
+  - name: Kinetic Flame
+    type: Damage
+    power: 20
+    SPCost: 20
+    skillReq: 20
+  - name: 
+    type: 
+    power: 0
+    SPCost: 0
+    skillReq: 0
+  - name: 
+    type: 
+    power: 0
+    SPCost: 0
+    skillReq: 0
+  - name: 
+    type: 
+    power: 0
+    SPCost: 0
+    skillReq: 0
+  - name: 
+    type: 
+    power: 0
+    SPCost: 0
+    skillReq: 0
+  - name: 
+    type: 
+    power: 0
+    SPCost: 0
+    skillReq: 0
   health: 1000
   maxHealth: 1000
   stamina: 100
