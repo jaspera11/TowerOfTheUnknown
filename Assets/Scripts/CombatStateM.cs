@@ -27,12 +27,13 @@ public class CombatStateM : MonoBehaviour
     public int uIndex;                     // Keeps track of the current unit (for move selection and combat)
     private bool mainCharDefeated;          // True if the main character (playerStats[0]) is defeated
     public bool fleeAttempted;             // True if a flee has been attempted for the battle
+    public bool skillChainR;
 
     // UI elements
     public List<GameObject> skillsPanels;
     public GameObject itemPanel;
     [SerializeField] private Text battleLog;
-    [SerializeField] private Button attackButton, skillsButton, itemButton, fleeButton;
+    [SerializeField] private Button attackButton, skillsButton, itemButton, fleeButton, skillChainButton;
     [SerializeField] private List<Button> itemButtons;
     [SerializeField] private List<Button> skillButtons1, skillButtons2, skillButtons3;
     [SerializeField] private Text playerHealth, playerStamina, enemyHealth, enemyStamina;
@@ -68,10 +69,10 @@ public class CombatStateM : MonoBehaviour
         }
 
         playerStats = GameObject.FindGameObjectWithTag("PlayerData").GetComponent<PlayerPrefab>().players;  // References the persistent list of player units
-        Debug.Log("Found players");
+        //Debug.Log("Found players");
         enemyStats = GameObject.FindGameObjectWithTag("EnemyData").GetComponent<EnemyPrefab>().enemies;     // References the persistent list of enemy units
-        Debug.Log("Found enemies");
-        Debug.Log(enemyStats.Count);
+        //Debug.Log("Found enemies");
+        //Debug.Log(enemyStats.Count);
 
         for (int i = 0; i < enemyStats.Count; i++)
         {
@@ -93,6 +94,7 @@ public class CombatStateM : MonoBehaviour
         expGain = new List<float>();                    // List of experience gained from defeating each enemy
         mainCharDefeated = false;
         fleeAttempted = false;
+        skillChainR = false;
         battleLog.text = "\n\n\n\n\n";          // Ingenius way of creating a battle log (assumes ~7~ newline text limit)
         // Sets skills/item panels to inactive upon battle start
         foreach (GameObject panel in skillsPanels)
@@ -158,6 +160,7 @@ public class CombatStateM : MonoBehaviour
                     //PlayerStats player = playerStats[uIndex];
 
                     itemButton.interactable = (playerStats[uIndex].itemUsed) ? false : true;    // itemUsed == true --> can't click on "Item"
+                    skillChainButton.interactable = (playerStats[uIndex].currSkills.Count > 0);
 
                     // If count of item is 0, can't click on that item
                     // Items in inventory must have same index as items in item button list!! -------------- fixable later?
@@ -217,8 +220,8 @@ public class CombatStateM : MonoBehaviour
                         return;
                     }
                     playerStats[uIndex].itemUsed = false;   // Reverts itemUsed after turn ends
-
-                    if (playerStats[uIndex].currOption == "Flee" && !fleeAttempted)
+                    
+                    if(playerStats[uIndex].currOption == "Flee" && !fleeAttempted)
                     {
                         AttemptFlee();
                     }
@@ -227,10 +230,11 @@ public class CombatStateM : MonoBehaviour
                 || (playerStats[uIndex].currOption == "Attack" && (playerStats[uIndex].currEnemy == null || playerStats[uIndex].currSkills.Count == 0))
                 || (playerStats[uIndex].currOption == "Skills" && (playerStats[uIndex].currEnemy == null || playerStats[uIndex].currSkills.Count < chainLength))
                 || (playerStats[uIndex].currOption == "Item" && playerStats[uIndex].currItem.name == "")
-                || playerStats[uIndex].currOption == "Flee";
+                || playerStats[uIndex].currOption == "Flee" || !skillChainR;    
                     //Debug.Log(deciding);
                     if (!deciding)
                     {
+                        skillChainR = false;
                         uIndex++;
                     }
                     //uIndex++;                               // Switches to next player
@@ -243,7 +247,7 @@ public class CombatStateM : MonoBehaviour
 
                 }
 
-
+                
 
                 break;
 
@@ -261,7 +265,7 @@ public class CombatStateM : MonoBehaviour
                     switch (playerStats[uIndex].currOption)
                     {
                         case "Attack":
-
+                            
                         case "Skills":
                             UseSkill(playerStats[uIndex]); // Use skills, damage enemies, gain exp if enemy defeated
 
@@ -400,7 +404,7 @@ public class CombatStateM : MonoBehaviour
         //Debug.Log(player_disp.currEnemy.health.ToString());
         //Debug.Log(player_disp.currEnemy.);
         UnitStats player_disp;
-        if (playerp)
+        if(playerp)
         {
             player_disp = playerStats[uIndex];
             playerHealth.text = player_disp.health.ToString() + " / " + player_disp.maxHealth.ToString();
@@ -408,8 +412,7 @@ public class CombatStateM : MonoBehaviour
             //Debug.Log(player_disp.charName);
             enemyHealth.text = player_disp.currEnemy.health.ToString() + " / " + player_disp.currEnemy.maxHealth.ToString();
             enemyStamina.text = player_disp.currEnemy.stamina.ToString() + " / " + player_disp.currEnemy.maxStamina.ToString();
-        }
-        else
+        } else
         {
             player_disp = playerStats[0];
             playerHealth.text = player_disp.health.ToString() + " / " + player_disp.maxHealth.ToString();
@@ -417,7 +420,7 @@ public class CombatStateM : MonoBehaviour
             enemyHealth.text = player_disp.currEnemy.health.ToString() + " / " + player_disp.currEnemy.maxHealth.ToString();
             enemyStamina.text = player_disp.currEnemy.stamina.ToString() + " / " + player_disp.currEnemy.maxStamina.ToString();
         }
-
+        
     }
 
     /*
@@ -640,7 +643,7 @@ public class CombatStateM : MonoBehaviour
 
     // Use the item in currItem
     private void UseItem(PlayerStats stats)
-    {
+    { 
         switch (stats.currItem.name)
         {
             // [ Placeholder ]
@@ -744,7 +747,7 @@ public class CombatStateM : MonoBehaviour
         {
             AddBattleLog("Flee failed!  Escape is no longer an option");
         }
-
+            
         fleeAttempted = true;
     }
 
