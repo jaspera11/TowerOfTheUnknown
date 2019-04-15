@@ -85,7 +85,7 @@ public class PlayerPhaseState : MonoBehaviour
     public void FleeButton()
     {
         PlayerStats player = stateMachine.playerStats[stateMachine.uIndex];
-        if (stateMachine.currState != CombatStateM.CombatState.PlayerPhase)
+        if (stateMachine.currState != CombatStateM.CombatState.PlayerPhase || stateMachine.fleeAttempted)
             return;
         player.currOption = "Flee";
     }

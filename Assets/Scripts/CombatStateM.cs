@@ -26,7 +26,7 @@ public class CombatStateM : MonoBehaviour
     public CombatState currState;          // Current combat state
     public int uIndex;                     // Keeps track of the current unit (for move selection and combat)
     private bool mainCharDefeated;          // True if the main character (playerStats[0]) is defeated
-    private bool fleeAttempted;             // True if a flee has been attempted for the battle
+    public bool fleeAttempted;             // True if a flee has been attempted for the battle
 
     // UI elements
     public List<GameObject> skillsPanels;
@@ -218,11 +218,16 @@ public class CombatStateM : MonoBehaviour
                     }
                     playerStats[uIndex].itemUsed = false;   // Reverts itemUsed after turn ends
 
+                    if (playerStats[uIndex].currOption == "Flee" && !fleeAttempted)
+                    {
+                        AttemptFlee();
+                    }
 
                     bool deciding = (playerStats[uIndex].currOption.Length <= 0)
                 || (playerStats[uIndex].currOption == "Attack" && (playerStats[uIndex].currEnemy == null || playerStats[uIndex].currSkills.Count == 0))
                 || (playerStats[uIndex].currOption == "Skills" && (playerStats[uIndex].currEnemy == null || playerStats[uIndex].currSkills.Count < chainLength))
-                || (playerStats[uIndex].currOption == "Item" && playerStats[uIndex].currItem.name == "");
+                || (playerStats[uIndex].currOption == "Item" && playerStats[uIndex].currItem.name == "")
+                || playerStats[uIndex].currOption == "Flee";
                     //Debug.Log(deciding);
                     if (!deciding)
                     {
@@ -266,10 +271,11 @@ public class CombatStateM : MonoBehaviour
                                 uIndex++;
                             }
                             break;
-                        case "Flee":
-                            if (fleeAttempted) break;   // If flee attempted before, cannot try again
-                            AttemptFlee();              // Attempt the flee
-                            break;
+                        //case "Flee":
+                        //    //if (fleeAttempted)
+                        //    //    break;   // If flee attempted before, cannot try again
+                        //    AttemptFlee();              // Attempt the flee
+                        //    break;
                         default:
                             break;
                     }
@@ -394,7 +400,7 @@ public class CombatStateM : MonoBehaviour
         //Debug.Log(player_disp.currEnemy.health.ToString());
         //Debug.Log(player_disp.currEnemy.);
         UnitStats player_disp;
-        if(playerp)
+        if (playerp)
         {
             player_disp = playerStats[uIndex];
             playerHealth.text = player_disp.health.ToString() + " / " + player_disp.maxHealth.ToString();
@@ -402,7 +408,8 @@ public class CombatStateM : MonoBehaviour
             //Debug.Log(player_disp.charName);
             enemyHealth.text = player_disp.currEnemy.health.ToString() + " / " + player_disp.currEnemy.maxHealth.ToString();
             enemyStamina.text = player_disp.currEnemy.stamina.ToString() + " / " + player_disp.currEnemy.maxStamina.ToString();
-        } else
+        }
+        else
         {
             player_disp = playerStats[0];
             playerHealth.text = player_disp.health.ToString() + " / " + player_disp.maxHealth.ToString();
@@ -418,7 +425,7 @@ public class CombatStateM : MonoBehaviour
      */
 
 
-    //Curently unused.
+    //Curently unused.  
     /*
      * Handles UI elements (State machine --> UI) and other calculations for each player unit
      * If player is still deciding, yield the CPU
@@ -662,7 +669,7 @@ public class CombatStateM : MonoBehaviour
         stats.itemUsed = true;  // Player has used the item (cannot use it again until the next turn)
     }
 
-    /*
+    /* 
      * Handles damage calculation.
      * If damage is higher than enemy health, remove enemy from list
      * If it's a player unit, gain experience and level up if there's enough experience
@@ -726,15 +733,25 @@ public class CombatStateM : MonoBehaviour
     // Attempt to flee the battle
     private void AttemptFlee()
     {
+        Debug.Log("flee attempt");
         // If enemy is a boss, you can't run
         float fleeChance = (GameObject.FindGameObjectWithTag("EnemyData").GetComponent<EnemyPrefab>().isBoss) ? 0f : (1f / 3f);
-        if (Random.Range(0f, 1f) < fleeChance) Flee(); // If flee chosen, flee the battle
+        if (Random.Range(0f, 1f) < fleeChance)
+        {
+            Flee(); // If flee chosen, flee the battle
+        }
+        else
+        {
+            AddBattleLog("Flee failed!  Escape is no longer an option");
+        }
+
         fleeAttempted = true;
     }
 
     // Handles player/enemy unit flee option
     private void Flee()
     {
+        Debug.Log("fled");
         // TODO: [ Do flee animation ]
         AddBattleLog("Player fled!");
 
