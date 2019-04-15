@@ -499,39 +499,6 @@ public class CombatStateM : MonoBehaviour
                         }
                         AddBattleLog("The enemy team's defense has decreased!");
                         break;
-                    case "":
-                        //increase party defense, decrease enemy party attack
-                        for (int i = 0; i < playerStats.Count; i++)
-                        {
-                            playerStats[i].defense *= 2;
-                        }
-                        for (int i = 0; i < enemyStats.Count; i++)
-                        {
-                            enemyStats[i].attack = Mathf.Ceil(enemyStats[i].attack / 2);
-                        }
-                        AddBattleLog("Your party's defense has increased and the enemy team's attack has decreased!");
-                        break;
-                    case " ":
-                        //increase party speed
-                        for (int i = 0; i < playerStats.Count; i++)
-                        {
-                            playerStats[i].speed *= 2;
-                        }
-                        AddBattleLog("The team's speed has increased!");
-                        break;
-
-                    case "  ":
-                        //Increase party's luck, decrease enemy's luck
-                        for (int i = 0; i < playerStats.Count; i++)
-                        {
-                            playerStats[i].luck *= 2;
-                        }
-                        for (int i = 0; i < enemyStats.Count; i++)
-                        {
-                            enemyStats[i].luck = Mathf.Ceil(enemyStats[i].luck / 2);
-                        }
-                        AddBattleLog("Your party's crit chance has increased and the enemy team's crit chance has decreased!");
-                        break;
                     case "Bio-Drug":
                         //Heal party
                         for (int i = 0; i < playerStats.Count; i++)
@@ -555,6 +522,39 @@ public class CombatStateM : MonoBehaviour
                             enemyStats[i].attack = Mathf.Ceil(enemyStats[i].attack / 2);
                         }
                         AddBattleLog("The enemy team's attack has decreased!");
+                        break;
+                    case "Superspeed Guard":
+                        //increase party defense, decrease enemy party attack
+                        for (int i = 0; i < playerStats.Count; i++)
+                        {
+                            playerStats[i].defense *= 2;
+                        }
+                        for (int i = 0; i < enemyStats.Count; i++)
+                        {
+                            enemyStats[i].attack = Mathf.Ceil(enemyStats[i].attack / 2);
+                        }
+                        AddBattleLog("Your party's defense has increased and the enemy team's attack has decreased!");
+                        break;
+                    case "Acceleration":
+                        //increase party speed
+                        for (int i = 0; i < playerStats.Count; i++)
+                        {
+                            playerStats[i].speed *= 2;
+                        }
+                        AddBattleLog("The team's speed has increased!");
+                        break;
+
+                    case "Speed Mirage":
+                        //Increase party's luck, decrease enemy's luck
+                        for (int i = 0; i < playerStats.Count; i++)
+                        {
+                            playerStats[i].luck *= 2;
+                        }
+                        for (int i = 0; i < enemyStats.Count; i++)
+                        {
+                            enemyStats[i].luck = Mathf.Ceil(enemyStats[i].luck / 2);
+                        }
+                        AddBattleLog("Your party's crit chance has increased and the enemy team's crit chance has decreased!");
                         break;
                     default:
                         break;
