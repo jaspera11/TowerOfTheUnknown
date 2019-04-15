@@ -2,40 +2,50 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Attach to whatever unit you want
-
+// For enemy units (attach to children objects of enemy prefab)
 public class UnitStats : MonoBehaviour
 {
-    public int level = 1;
-    public int health = 200;
-    public int maxhealth = 200;
-    public int stamina = 50;
-    public int maxstamina = 50;
-    public int attack = 10;
-    public int defense = 10;
-    public int speed = 10;
-    public int skill = 10;
-    public int luck = 10;
-    public int experience = 10;
-    private int maxExperience = 10;
-    private int maxLevel = 10;
-    public string entityType;
+    public string charName;         // Character's name (unique)
+    public int level = 1;           // Current level
+    public List<Skill> skillList;   // List of possible skills
+    public float health;            // Current health
+    public float maxHealth;         // Maximum health
+    public float stamina;           // Current stamina
+    public float maxStamina;        // Maximum stamina
+    public float attack;            // Attack stat (affects damage)
+    public float defense;           // Defense stat (affects damage)
+    public float speed;             // Speed stat (affects number of skills in currSkills)
+    public float luck;              // Luck stat (affects critical hit chance)
+    public string currOption;       // Current option (Attack, Skills, Item, Flee)
+    public Stack<Skill> currSkills; // Current skill(s) for that turn (multiple can be chained together)
+    public UnitStats currEnemy;     // Current enemy that this unit is targeting
 
-    public void levelUp()
+    // Generic function that destroys all objects by a certain tag
+    public static void DestroyByTag(string tag)
     {
-        if (level == maxLevel) return;
-        if (experience >= maxExperience)
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag(tag))
         {
-            experience -= maxExperience;
-            maxExperience *= 2;
-            level++;
-            maxhealth += 30;
-            maxstamina += 15;
-            attack += 10;
-            defense += 10;
-            speed += 10;
-            skill += 5;
-            luck += 5;
+            Destroy(obj);
         }
+    }
+}
+
+// Parameters for skills
+[System.Serializable]
+public struct Skill
+{
+    public string name;
+    public string type;
+    public int power; // optional for non-damaging moves
+    public int SPCost;
+    public int skillReq;
+
+    public Skill(string name, string type, int power, int SPCost, int skillReq)
+    {
+        this.name = name;
+        this.type = type;
+        this.power = power;
+        this.SPCost = SPCost;
+        this.skillReq = skillReq;
     }
 }
