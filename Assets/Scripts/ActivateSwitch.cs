@@ -16,6 +16,6 @@ public class ActivateSwitch : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (GameObject.ReferenceEquals(other.gameObject, block))
-            GameObject.Find(exit.name).GetComponent<LevelChange>().decrementActiveSwitches(); ;
+            GameObject.Find(exit.name).GetComponent<LevelChange>().decrementActiveSwitches(); 
     }
 }
