@@ -10,6 +10,8 @@ public class CombatStateM : MonoBehaviour
     // [ Change some of these to public later... ]
     public List<PlayerStats> playerStats;  // List of player data (each unit)
     public List<UnitStats> enemyStats;     // List of enemy data (each unit)
+    [SerializeField] public List<GameObject> playerSprites; //List of player sprites
+    [SerializeField] public List<GameObject> enemySprites; //List of enemy sprites
     private List<float> expGain;            // List of experience gained by defeating each enemy
     public enum CombatState                // Possible combat states
     {
@@ -55,11 +57,30 @@ public class CombatStateM : MonoBehaviour
     // Initialize variables
     private void Start()
     {
+        for(int i=0;i<enemySprites.Count;i++)
+        {
+            enemySprites[i].SetActive(false);
+        }
+
+        for (int i = 0; i < enemySprites.Count; i++)
+        {
+            playerSprites[i].SetActive(false);
+        }
+
         playerStats = GameObject.FindGameObjectWithTag("PlayerData").GetComponent<PlayerPrefab>().players;  // References the persistent list of player units
         Debug.Log("Found players");
         enemyStats = GameObject.FindGameObjectWithTag("EnemyData").GetComponent<EnemyPrefab>().enemies;     // References the persistent list of enemy units
         Debug.Log("Found enemies");
         Debug.Log(enemyStats.Count);
+
+        for(int i=0;i<enemyStats.Count;i++)
+        {
+            enemySprites[i].SetActive(true);
+        }
+        for (int i = 0; i < playerStats.Count; i++)
+        {
+            playerSprites[i].SetActive(true);
+        }
 
         skillButtons = new List<List<Button>>();
         skillButtons.Add(skillButtons1);
@@ -628,6 +649,7 @@ public class CombatStateM : MonoBehaviour
             {
                 UnitStats enemy = stats.currEnemy;              // Gets the enemy unit
                 float exp = expGain[enemyStats.IndexOf(enemy)]; // Gets the enemy exp value from a list (calculated at beginning)
+                enemySprites[enemyStats.IndexOf(enemy)].SetActive(false);
                 enemyStats.Remove(enemy);                       // Removes enemy unit from enemyStats list
                 AddBattleLog("Players gained " + exp + " experience!");
                 // Have (all) the players gain experience, level up if necessary
@@ -648,6 +670,7 @@ public class CombatStateM : MonoBehaviour
                 }
                 else
                 {
+                    playerSprites[playerStats.IndexOf(player)].SetActive(false);
                     playerStats.Remove(player);
                 }
             }
