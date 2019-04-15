@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.027753133, g: 0.045229137, b: 0.10014754, a: 1}
+  m_IndirectSpecularColor: {r: 0.027753126, g: 0.045229092, b: 0.100147404, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2158,7 +2158,7 @@ PrefabInstance:
     - target: {fileID: 6441171430303908559, guid: 24ce1da61b592455c85e0e07c6524389,
         type: 3}
       propertyPath: m_Size.x
-      value: 1.2
+      value: 1.02
       objectReference: {fileID: 0}
     - target: {fileID: 6441171430303908559, guid: 24ce1da61b592455c85e0e07c6524389,
         type: 3}
@@ -12451,11 +12451,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37420ffa413e89041b9c78954ef78361, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  d_name: BakBak
+  d_name: 
   sentences:
-  - "Kentucky\t\t"
-  - 'Fried '
-  - 'Chicken '
+  - You sit on the plasticy sofa,
+  - It's comfortable for exactly 2 seconds.
+  - '...'
+  - '...'
+  - '...'
+  - Do you really want to sit around all day? Go explore the next room!
 --- !u!1 &1504630404 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1433533551738064461, guid: 4242945e3b6ab134fb254770b800bbb0,
@@ -12612,7 +12615,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!82 &1523727281
 AudioSource:
   m_ObjectHideFlags: 0
@@ -17994,7 +17997,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7979a671ecacab458204fa85c241286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogue: {fileID: 0}
+  dialogue: {fileID: 1501238380}
 --- !u!65 &1849909928
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -20049,7 +20052,7 @@ PrefabInstance:
     - target: {fileID: 6441171430303908559, guid: 24ce1da61b592455c85e0e07c6524389,
         type: 3}
       propertyPath: m_Size.x
-      value: 1.2
+      value: 1.02
       objectReference: {fileID: 0}
     - target: {fileID: 6441171430303908559, guid: 24ce1da61b592455c85e0e07c6524389,
         type: 3}
@@ -21662,8 +21665,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 173.15, y: 0}
-  m_SizeDelta: {x: 346.3, y: 64.9}
+  m_AnchoredPosition: {x: 727, y: -47.92503}
+  m_SizeDelta: {x: 1454, y: 160.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8516188060191953584
 GameObject:
@@ -22225,11 +22228,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37420ffa413e89041b9c78954ef78361, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  d_name: Dummy
+  d_name: 
   sentences:
-  - :)
-  - :D
-  - ;)
+  - It's a reception desk
+  - Without a receptionist
+  - Maybe you should wait to be seen?
 --- !u!1 &8516188061186416549
 GameObject:
   m_ObjectHideFlags: 0

@@ -57,7 +57,7 @@ public class CombatStateM : MonoBehaviour
     // Initialize variables
     private void Start()
     {
-        for(int i=0;i<enemySprites.Count;i++)
+        for (int i = 0; i < enemySprites.Count; i++)
         {
             enemySprites[i].SetActive(false);
         }
@@ -73,7 +73,7 @@ public class CombatStateM : MonoBehaviour
         Debug.Log("Found enemies");
         Debug.Log(enemyStats.Count);
 
-        for(int i=0;i<enemyStats.Count;i++)
+        for (int i = 0; i < enemyStats.Count; i++)
         {
             enemySprites[i].SetActive(true);
         }
@@ -506,7 +506,7 @@ public class CombatStateM : MonoBehaviour
                         break;
                     case "Magnify":
                         //increase party attack
-                        for(int i=0; i<playerStats.Count;i++)
+                        for (int i = 0; i < playerStats.Count; i++)
                         {
                             playerStats[i].attack += 10;
                         }
@@ -514,9 +514,9 @@ public class CombatStateM : MonoBehaviour
                         break;
                     case "Gravity":
                         //decrease enemy party defense
-                        for(int i = 0; i < enemyStats.Count; i++)
+                        for (int i = 0; i < enemyStats.Count; i++)
                         {
-                            enemyStats[i].defense = Mathf.Ceil(enemyStats[i].defense /2);
+                            enemyStats[i].defense = Mathf.Ceil(enemyStats[i].defense / 2);
                         }
                         AddBattleLog("The enemy team's defense has decreased!");
                         break;
@@ -524,7 +524,7 @@ public class CombatStateM : MonoBehaviour
                         //Heal party
                         for (int i = 0; i < playerStats.Count; i++)
                         {
-                            playerStats[i].health += (int).33* playerStats[i].health;
+                            playerStats[i].health += (int).33 * playerStats[i].health;
                         }
                         AddBattleLog("The team's health has recovered!");
                         break;
@@ -590,9 +590,7 @@ public class CombatStateM : MonoBehaviour
 
     // Use the item in currItem
     private void UseItem(PlayerStats stats)
-    {
-        // TODO: [ Fill in cases as necessary for what to do for each item ]
-        // TODO: [ Do animation for each item]
+    { 
         switch (stats.currItem.name)
         {
             // [ Placeholder ]
