@@ -217,12 +217,17 @@ public class CombatStateM : MonoBehaviour
                         return;
                     }
                     playerStats[uIndex].itemUsed = false;   // Reverts itemUsed after turn ends
-
+                    
+                    if(playerStats[uIndex].currOption == "Flee" && !fleeAttempted)
+                    {
+                        AttemptFlee();
+                    }
 
                     bool deciding = (playerStats[uIndex].currOption.Length <= 0)
                 || (playerStats[uIndex].currOption == "Attack" && (playerStats[uIndex].currEnemy == null || playerStats[uIndex].currSkills.Count == 0))
                 || (playerStats[uIndex].currOption == "Skills" && (playerStats[uIndex].currEnemy == null || playerStats[uIndex].currSkills.Count < chainLength))
-                || (playerStats[uIndex].currOption == "Item" && playerStats[uIndex].currItem.name == "");    
+                || (playerStats[uIndex].currOption == "Item" && playerStats[uIndex].currItem.name == "")
+                || playerStats[uIndex].currOption == "Flee";    
                     //Debug.Log(deciding);
                     if (!deciding)
                     {
@@ -266,10 +271,11 @@ public class CombatStateM : MonoBehaviour
                                 uIndex++;
                             }
                             break;
-                        case "Flee":
-                            if (fleeAttempted) break;   // If flee attempted before, cannot try again
-                            AttemptFlee();              // Attempt the flee
-                            break;
+                        //case "Flee":
+                        //    //if (fleeAttempted)
+                        //    //    break;   // If flee attempted before, cannot try again
+                        //    AttemptFlee();              // Attempt the flee
+                        //    break;
                         default:
                             break;
                     }
@@ -726,15 +732,25 @@ public class CombatStateM : MonoBehaviour
     // Attempt to flee the battle
     private void AttemptFlee()
     {
+        Debug.Log("flee attempt");
         // If enemy is a boss, you can't run
         float fleeChance = (GameObject.FindGameObjectWithTag("EnemyData").GetComponent<EnemyPrefab>().isBoss) ? 0f : (1f / 3f);
-        if (Random.Range(0f, 1f) < fleeChance) Flee(); // If flee chosen, flee the battle
+        if (Random.Range(0f, 1f) < fleeChance)
+        {
+            Flee(); // If flee chosen, flee the battle
+        }
+        else
+        {
+            AddBattleLog("Flee failed!  Escape is no longer an option");
+        }
+            
         fleeAttempted = true;
     }
 
     // Handles player/enemy unit flee option
     private void Flee()
     {
+        Debug.Log("fled");
         // TODO: [ Do flee animation ]
         AddBattleLog("Player fled!");
 
