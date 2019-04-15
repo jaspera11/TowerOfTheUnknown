@@ -16,20 +16,20 @@ using UnityEngine.UI;
 
 public class PlayerPhaseState : MonoBehaviour
 {
-    private CombatStateM stateMachine;                      // Reference to state machine and variables
+    [SerializeField] private CombatStateM stateMachine;                      // Reference to state machine and variables
     [SerializeField] private const int attackPower = 10;    // The power of the move "Attack"
-    [SerializeField] private Text playerHealth, playerStamina, enemyHealth, enemyStamina;
+    //[SerializeField] private Text playerHealth, playerStamina, enemyHealth, enemyStamina;
 
     private void Update()
     {
         // TODO: [ Find a better place to put this ]
         // Updates health and stamina information
-        UnitStats player = (stateMachine.currState != CombatStateM.CombatState.EnemyPhase || stateMachine.currState != CombatStateM.CombatState.EnemyCombat)
-            ? stateMachine.playerStats[stateMachine.uIndex] : stateMachine.enemyStats[stateMachine.uIndex];
-        playerHealth.text = player.health.ToString() + " / " + player.maxHealth.ToString();
-        playerStamina.text = player.stamina.ToString() + " / " + player.maxStamina.ToString();
-        enemyHealth.text = player.currEnemy.health.ToString() + " / " + player.currEnemy.maxHealth.ToString();
-        enemyStamina.text = player.currEnemy.stamina.ToString() + " / " + player.currEnemy.maxStamina.ToString();
+        //UnitStats player = (stateMachine.currState != CombatStateM.CombatState.EnemyPhase || stateMachine.currState != CombatStateM.CombatState.EnemyCombat)
+        //    ? stateMachine.playerStats[stateMachine.uIndex] : stateMachine.enemyStats[stateMachine.uIndex];
+        //playerHealth.text = player.health.ToString() + " / " + player.maxHealth.ToString();
+        //playerStamina.text = player.stamina.ToString() + " / " + player.maxStamina.ToString();
+        //enemyHealth.text = player.currEnemy.health.ToString() + " / " + player.currEnemy.maxHealth.ToString();
+        //enemyStamina.text = player.currEnemy.stamina.ToString() + " / " + player.currEnemy.maxStamina.ToString();
     }
 
     public void AttackButton()

@@ -10,6 +10,8 @@ public class CombatStateM : MonoBehaviour
     // [ Change some of these to public later... ]
     public List<PlayerStats> playerStats;  // List of player data (each unit)
     public List<UnitStats> enemyStats;     // List of enemy data (each unit)
+    [SerializeField] public List<GameObject> playerSprites; //List of player sprites
+    [SerializeField] public List<GameObject> enemySprites; //List of enemy sprites
     private List<float> expGain;            // List of experience gained by defeating each enemy
     public enum CombatState                // Possible combat states
     {
@@ -55,11 +57,30 @@ public class CombatStateM : MonoBehaviour
     // Initialize variables
     private void Start()
     {
+        for (int i = 0; i < enemySprites.Count; i++)
+        {
+            enemySprites[i].SetActive(false);
+        }
+
+        for (int i = 0; i < enemySprites.Count; i++)
+        {
+            playerSprites[i].SetActive(false);
+        }
+
         playerStats = GameObject.FindGameObjectWithTag("PlayerData").GetComponent<PlayerPrefab>().players;  // References the persistent list of player units
         Debug.Log("Found players");
         enemyStats = GameObject.FindGameObjectWithTag("EnemyData").GetComponent<EnemyPrefab>().enemies;     // References the persistent list of enemy units
         Debug.Log("Found enemies");
         Debug.Log(enemyStats.Count);
+
+        for (int i = 0; i < enemyStats.Count; i++)
+        {
+            enemySprites[i].SetActive(true);
+        }
+        for (int i = 0; i < playerStats.Count; i++)
+        {
+            playerSprites[i].SetActive(true);
+        }
 
         skillButtons = new List<List<Button>>();
         skillButtons.Add(skillButtons1);
@@ -201,7 +222,7 @@ public class CombatStateM : MonoBehaviour
                     bool deciding = (playerStats[uIndex].currOption.Length <= 0)
                 || (playerStats[uIndex].currOption == "Attack" && (playerStats[uIndex].currEnemy == null || playerStats[uIndex].currSkills.Count == 0))
                 || (playerStats[uIndex].currOption == "Skills" && (playerStats[uIndex].currEnemy == null || playerStats[uIndex].currSkills.Count < chainLength))
-                || (playerStats[uIndex].currOption == "Item" && playerStats[uIndex].currItem.name == "");    
+                || (playerStats[uIndex].currOption == "Item" && playerStats[uIndex].currItem.name == "");
                     //Debug.Log(deciding);
                     if (!deciding)
                     {
@@ -209,12 +230,15 @@ public class CombatStateM : MonoBehaviour
                     }
                     //uIndex++;                               // Switches to next player
 
-                    
+                    if (uIndex >= playerStats.Count)
+                    {
+                        PostPlayerPhaseState(); // Sets variables after PlayerPhase state
+                    }
 
-                    
+
                 }
 
-                
+
 
                 break;
 
@@ -232,6 +256,7 @@ public class CombatStateM : MonoBehaviour
                     switch (playerStats[uIndex].currOption)
                     {
                         case "Attack":
+
                         case "Skills":
                             UseSkill(playerStats[uIndex]); // Use skills, damage enemies, gain exp if enemy defeated
 
@@ -253,6 +278,11 @@ public class CombatStateM : MonoBehaviour
                     {
                         currState = CombatState.Win;
                     }
+                    if (uIndex >= playerStats.Count)
+                    {
+                        currState = CombatState.EnemyPhase;
+                        uIndex = 0;
+                    }
                 }
                 break;
 
@@ -270,6 +300,11 @@ public class CombatStateM : MonoBehaviour
                     // TODO: [ Implement UI stuff, decision making (choose move, skill, target player, etc.), use enemyStats[uIndex] ]
                     ChooseOption();
                     uIndex++;
+                    if (uIndex >= enemyStats.Count)
+                    {
+                        currState = CombatState.EnemyCombat;
+                        uIndex = 0;
+                    }
                 }
                 break;
 
@@ -309,6 +344,10 @@ public class CombatStateM : MonoBehaviour
                     {
                         currState = CombatState.Defeat;
                     }
+                    if (uIndex >= enemyStats.Count)
+                    {
+                        PrePlayerPhaseState();
+                    }
                 }
                 break;
 
@@ -343,10 +382,35 @@ public class CombatStateM : MonoBehaviour
         //Debug.Log(uIndex);
 
 
-        playerHealth.text = playerStats[0].health.ToString() + " / " + playerStats[0].maxHealth.ToString();
-        playerStamina.text = playerStats[0].stamina.ToString() + " / " + playerStats[0].maxStamina.ToString();
-        enemyHealth.text = enemyStats[0].health.ToString() + " / " + enemyStats[0].maxHealth.ToString();
-        enemyStamina.text = enemyStats[0].stamina.ToString() + " / " + enemyStats[0].maxStamina.ToString();
+        //playerHealth.text = playerStats[0].health.ToString() + " / " + playerStats[0].maxHealth.ToString();
+        //playerStamina.text = playerStats[0].stamina.ToString() + " / " + playerStats[0].maxStamina.ToString();
+        //enemyHealth.text = enemyStats[0].health.ToString() + " / " + enemyStats[0].maxHealth.ToString();
+        //enemyStamina.text = enemyStats[0].stamina.ToString() + " / " + enemyStats[0].maxStamina.ToString();
+
+        bool playerp = (currState == CombatState.PlayerCombat || currState == CombatState.PlayerPhase);
+        //UnitStats player_disp = (currState != CombatStateM.CombatState.EnemyPhase || currState != CombatStateM.CombatState.EnemyCombat)
+        //    ? playerStats[uIndex] : enemyStats[uIndex];
+
+        //Debug.Log(player_disp.currEnemy.health.ToString());
+        //Debug.Log(player_disp.currEnemy.);
+        UnitStats player_disp;
+        if(playerp)
+        {
+            player_disp = playerStats[uIndex];
+            playerHealth.text = player_disp.health.ToString() + " / " + player_disp.maxHealth.ToString();
+            playerStamina.text = player_disp.stamina.ToString() + " / " + player_disp.maxStamina.ToString();
+            //Debug.Log(player_disp.charName);
+            enemyHealth.text = player_disp.currEnemy.health.ToString() + " / " + player_disp.currEnemy.maxHealth.ToString();
+            enemyStamina.text = player_disp.currEnemy.stamina.ToString() + " / " + player_disp.currEnemy.maxStamina.ToString();
+        } else
+        {
+            player_disp = playerStats[0];
+            playerHealth.text = player_disp.health.ToString() + " / " + player_disp.maxHealth.ToString();
+            playerStamina.text = player_disp.stamina.ToString() + " / " + player_disp.maxStamina.ToString();
+            enemyHealth.text = player_disp.currEnemy.health.ToString() + " / " + player_disp.currEnemy.maxHealth.ToString();
+            enemyStamina.text = player_disp.currEnemy.stamina.ToString() + " / " + player_disp.currEnemy.maxStamina.ToString();
+        }
+
     }
 
     /*
@@ -354,7 +418,7 @@ public class CombatStateM : MonoBehaviour
      */
 
 
-    //Curently unused.  
+    //Curently unused.
     /*
      * Handles UI elements (State machine --> UI) and other calculations for each player unit
      * If player is still deciding, yield the CPU
@@ -434,7 +498,7 @@ public class CombatStateM : MonoBehaviour
             player.currItem = new Item("", 0);          // Item - current item that player will use
             player.currOption = "";                     // String - name of the current option (Attack, Skills, Item, Flee)
             player.currSkills = new Stack<Skill>();     // Stack of Skills - skill(s) that player unit will use during combat phase
-            player.currEnemy = null;                    // UnitStats - reference to the enemy unit that player unit is targeting
+            player.currEnemy = enemyStats[0];                    // UnitStats - reference to the enemy unit that player unit is targeting
         }
         // Make buttons interactable (if flee has been attempted, make that uninteractable
         attackButton.interactable = skillsButton.interactable = itemButton.interactable = true;
@@ -569,7 +633,7 @@ public class CombatStateM : MonoBehaviour
 
     // Use the item in currItem
     private void UseItem(PlayerStats stats)
-    { 
+    {
         switch (stats.currItem.name)
         {
             // [ Placeholder ]
@@ -598,7 +662,7 @@ public class CombatStateM : MonoBehaviour
         stats.itemUsed = true;  // Player has used the item (cannot use it again until the next turn)
     }
 
-    /* 
+    /*
      * Handles damage calculation.
      * If damage is higher than enemy health, remove enemy from list
      * If it's a player unit, gain experience and level up if there's enough experience
@@ -626,6 +690,7 @@ public class CombatStateM : MonoBehaviour
             {
                 UnitStats enemy = stats.currEnemy;              // Gets the enemy unit
                 float exp = expGain[enemyStats.IndexOf(enemy)]; // Gets the enemy exp value from a list (calculated at beginning)
+                enemySprites[enemyStats.IndexOf(enemy)].SetActive(false);
                 enemyStats.Remove(enemy);                       // Removes enemy unit from enemyStats list
                 AddBattleLog("Players gained " + exp + " experience!");
                 // Have (all) the players gain experience, level up if necessary
@@ -646,6 +711,7 @@ public class CombatStateM : MonoBehaviour
                 }
                 else
                 {
+                    playerSprites[playerStats.IndexOf(player)].SetActive(false);
                     playerStats.Remove(player);
                 }
             }
@@ -774,6 +840,7 @@ public class CombatStateM : MonoBehaviour
         }
 
         enemyStats[uIndex].currEnemy = playerStats[index];
+        Debug.Log(enemyStats[uIndex].currEnemy.charName);
     }
 
     public void BasicAttack()
@@ -782,7 +849,7 @@ public class CombatStateM : MonoBehaviour
         enemyStats[uIndex].currSkills.Push(new Skill("Attack", "Damage", 10, 0, 0));
         enemyStats[uIndex].currOption = "Attack";
         AddBattleLog("The enemy strikes");
-        Debug.Log("Enemy basic attack");
+        //Debug.Log("Enemy basic attack");
     }
 
     public void ChooseOption()
@@ -831,7 +898,7 @@ public class CombatStateM : MonoBehaviour
 
         //if (target.Evaluate() == Node.NodeStates.SUCCESS)
         //{
-        Debug.Log("pre root evaluate");
+        //Debug.Log("pre root evaluate");
         if (Root.Evaluate() == Node.NodeStates.SUCCESS)
         {
             //currState = CombatState.EnemyCombat;
