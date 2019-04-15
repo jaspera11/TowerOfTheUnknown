@@ -32,7 +32,9 @@ public class CombatStateM : MonoBehaviour
     [SerializeField] private Text battleLog;
     [SerializeField] private Button attackButton, skillsButton, itemButton, fleeButton;
     [SerializeField] private List<Button> itemButtons;
-    [SerializeField] private List<List<Button>> skillButtons;
+    [SerializeField] private List<Button> skillButtons1, skillButtons2, skillButtons3;
+    [SerializeField] private Text playerHealth, playerStamina, enemyHealth, enemyStamina;
+    private List<List<Button>> skillButtons;
 
     /*
      * ~ Methods found ~
@@ -54,7 +56,15 @@ public class CombatStateM : MonoBehaviour
     private void Start()
     {
         playerStats = GameObject.FindGameObjectWithTag("PlayerData").GetComponent<PlayerPrefab>().players;  // References the persistent list of player units
+        Debug.Log("Found players");
         enemyStats = GameObject.FindGameObjectWithTag("EnemyData").GetComponent<EnemyPrefab>().enemies;     // References the persistent list of enemy units
+        Debug.Log("Found enemies");
+        Debug.Log(enemyStats.Count);
+
+        skillButtons = new List<List<Button>>();
+        skillButtons.Add(skillButtons1);
+        skillButtons.Add(skillButtons2);
+        skillButtons.Add(skillButtons3);
 
         // TODO: [ Create enemy sprite buttons dynamically ]
 
@@ -112,6 +122,7 @@ public class CombatStateM : MonoBehaviour
 
             // Player phase state (menu/move selection)
             case (CombatState.PlayerPhase):
+                
                 // If all units have gone, move to combat scene
                 if (uIndex >= playerStats.Count)
                 {
@@ -120,16 +131,81 @@ public class CombatStateM : MonoBehaviour
                 // Else, make a decision for current player unit
                 else
                 {
-                    StartCoroutine("PlayerPhase");
+                    //Debug.Log("In coroutine" + uIndex);
+                    // TODO: [ Implement UI stuff, decision making (choose move, skill, enemy, etc.), use playerStats[uIndex] ]
+
+                    //PlayerStats player = playerStats[uIndex];
+
+                    itemButton.interactable = (playerStats[uIndex].itemUsed) ? false : true;    // itemUsed == true --> can't click on "Item"
+
+                    // If count of item is 0, can't click on that item
+                    // Items in inventory must have same index as items in item button list!! -------------- fixable later?
+                    //Debug.Log("Before item button loop");
+                    for (int i = 0; i < itemButtons.Count; i++)
+                    {
+                        //Debug.Log(i);
+                        itemButtons[i].interactable = (GameObject.FindGameObjectWithTag("PlayerData").GetComponent<PlayerPrefab>().inventory[i].count > 0) ? true : false;
+                    }
+
+                    // If current player doesn't have the skill/stamina to use a skill, can't click on that skill
+                    // Skills in each player's skill list must have same index as skills in skill button lists!! ------------- fixable later?
+                    //Debug.Log("Before skill button loop");
+                    for (int i = 0; i < skillButtons[uIndex].Count; i++)
+                    {
+                        //Debug.Log(i);
+                        bool isInteractable = (playerStats[uIndex].skill >= playerStats[uIndex].skillList[i].skillReq)
+                            && (playerStats[uIndex].stamina >= playerStats[uIndex].skillList[i].SPCost);
+                        skillButtons[uIndex][i].interactable = (isInteractable) ? true : false;
+                    }
+                    //Debug.Log("After skill button loop");
+                    playerStats[uIndex].currEnemy = enemyStats[0];  // Default current enemy is the first enemy
+
+                    // Calculate how many skills player can use
+                    int chainLength = 1;
+                    for (int i = PlayerPrefab.gameData.spdTH.Length - 1; i >= 0; i--)
+                    {
+                        if (playerStats[uIndex].speed < PlayerPrefab.gameData.spdTH[i] || playerStats[uIndex].skill < PlayerPrefab.gameData.sklTH[i])
+                        {
+                            continue;
+                        }
+                        chainLength++;
+                    }
+                    //Debug.Log("Pre coroutine");
+                    //StartCoroutine("PlayerPhase");
+                    
+                    //while (deciding)
+                    //{
+                    //    Debug.Log("In deciding loop");
+                    //    //yield return null;
+                    //    deciding = (playerStats[uIndex].currOption.Length <= 0)
+                    //        || (playerStats[uIndex].currOption == "Attack" && (playerStats[uIndex].currEnemy == null || playerStats[uIndex].currSkills.Count == 0))
+                    //        || (playerStats[uIndex].currOption == "Skills" && (playerStats[uIndex].currEnemy == null/* || playerStats[uIndex].currSkills.Count < chainLength*/))
+                    //        || (playerStats[uIndex].currOption == "Item" && playerStats[uIndex].currItem.name == "");
+                    //    Debug.Log("Deciding " + deciding);
+                    //}
+                    //PlayerPhase();
+                    //Debug.Log("Post coroutine");
+                    //Debug.Log(uIndex);
 
                     // If item chosen, use it, and then choose another option
                     if (playerStats[uIndex].currOption == "Item")
                     {
+                        //Debug.Log("Item check");
                         UseItem(playerStats[uIndex]);
                         return;
                     }
+
                     playerStats[uIndex].itemUsed = false;   // Reverts itemUsed after turn ends
-                    uIndex++;                               // Switches to next player
+                    bool deciding = (playerStats[uIndex].currOption.Length <= 0)
+                || (playerStats[uIndex].currOption == "Attack" && (playerStats[uIndex].currEnemy == null || playerStats[uIndex].currSkills.Count == 0))
+                || (playerStats[uIndex].currOption == "Skills" && (playerStats[uIndex].currEnemy == null || playerStats[uIndex].currSkills.Count < chainLength))
+                || (playerStats[uIndex].currOption == "Item" && playerStats[uIndex].currItem.name == "");
+                    //Debug.Log(deciding);
+                    if (!deciding)
+                    {
+                        uIndex++;
+                    }
+                    //uIndex++;                               // Switches to next player
                 }
                 break;
 
@@ -183,6 +259,7 @@ public class CombatStateM : MonoBehaviour
                 else
                 {
                     // TODO: [ Implement UI stuff, decision making (choose move, skill, target player, etc.), use enemyStats[uIndex] ]
+                    ChooseOption();
                     uIndex++;
                 }
                 break;
@@ -190,6 +267,7 @@ public class CombatStateM : MonoBehaviour
             // Executes enemy decisions
             case (CombatState.EnemyCombat):
                 // If all units have gone, it is the player's turn
+                Debug.Log("Enemy combat, uIndex " + uIndex);
                 if (uIndex >= enemyStats.Count)
                 {
                     PrePlayerPhaseState();
@@ -200,7 +278,9 @@ public class CombatStateM : MonoBehaviour
                     switch (enemyStats[uIndex].currOption)
                     {
                         case "Attack":
+                            
                         case "Skills":
+                            Debug.Log("Enemy using skill");
                             UseSkill(enemyStats[uIndex]);   // Use skills, damage enemies, gain exp if enemy defeated
 
                             // If enemy unit has no more skills, continue to next enemy unit
@@ -251,46 +331,61 @@ public class CombatStateM : MonoBehaviour
             default:
                 break;
         }
+        //Debug.Log(uIndex);
+
+        
+        playerHealth.text = playerStats[0].health.ToString() + " / " + playerStats[0].maxHealth.ToString();
+        playerStamina.text = playerStats[0].stamina.ToString() + " / " + playerStats[0].maxStamina.ToString();
+        enemyHealth.text = enemyStats[0].health.ToString() + " / " + enemyStats[0].maxHealth.ToString();
+        enemyStamina.text = enemyStats[0].stamina.ToString() + " / " + enemyStats[0].maxStamina.ToString();
     }
 
     /*
      * -------------------------------------------------- METHODS ---------------------------------------------------------------
      */
 
+
+        //Curently unused.  
     /*
      * Handles UI elements (State machine --> UI) and other calculations for each player unit
      * If player is still deciding, yield the CPU
      */
     IEnumerator PlayerPhase()
     {
+        Debug.Log("In coroutine" + uIndex);
         // TODO: [ Implement UI stuff, decision making (choose move, skill, enemy, etc.), use playerStats[uIndex] ]
 
-        PlayerStats player = playerStats[uIndex];
+        //PlayerStats player = playerStats[uIndex];
 
-        itemButton.interactable = (player.itemUsed) ? false : true;    // itemUsed == true --> can't click on "Item"
+        itemButton.interactable = (playerStats[uIndex].itemUsed) ? false : true;    // itemUsed == true --> can't click on "Item"
 
         // If count of item is 0, can't click on that item
         // Items in inventory must have same index as items in item button list!! -------------- fixable later?
+        Debug.Log("Before item button loop");
         for (int i = 0; i < itemButtons.Count; i++)
         {
-            itemButtons[i].interactable = (PlayerPrefab.gameData.inventory[i].count > 0) ? true : false;
+            Debug.Log(i);
+            itemButtons[i].interactable = (GameObject.FindGameObjectWithTag("PlayerData").GetComponent<PlayerPrefab>().inventory[i].count > 0) ? true : false;
         }
 
         // If current player doesn't have the skill/stamina to use a skill, can't click on that skill
         // Skills in each player's skill list must have same index as skills in skill button lists!! ------------- fixable later?
-        for (int i = 0; i < skillButtons.Count; i++)
+        Debug.Log("Before skill button loop");
+        for (int i = 0; i < skillButtons[uIndex].Count; i++)
         {
-            bool isInteractable = (player.skill >= player.skillList[i].skillReq)
-                && (player.stamina >= player.skillList[i].SPCost);
+            //Debug.Log(i);
+            bool isInteractable = (playerStats[uIndex].skill >= playerStats[uIndex].skillList[i].skillReq)
+                && (playerStats[uIndex].stamina >= playerStats[uIndex].skillList[i].SPCost);
             skillButtons[uIndex][i].interactable = (isInteractable) ? true : false;
         }
+        Debug.Log("After skill button loop");
         playerStats[uIndex].currEnemy = enemyStats[0];  // Default current enemy is the first enemy
 
         // Calculate how many skills player can use
         int chainLength = 1;
         for (int i = PlayerPrefab.gameData.spdTH.Length - 1; i >= 0; i--)
         {
-            if (player.speed < PlayerPrefab.gameData.spdTH[i] || player.skill < PlayerPrefab.gameData.sklTH[i])
+            if (playerStats[uIndex].speed < PlayerPrefab.gameData.spdTH[i] || playerStats[uIndex].skill < PlayerPrefab.gameData.sklTH[i])
             {
                 continue;
             }
@@ -298,17 +393,20 @@ public class CombatStateM : MonoBehaviour
         }
 
         // Main boolean that checks if the player unit has completed their turn
-        bool deciding = (player.currOption.Length <= 0)
-                || (player.currOption == "Attack" && (player.currEnemy == null || player.currSkills.Count == 0))
-                || (player.currOption == "Skills" && (player.currEnemy == null || player.currSkills.Count < chainLength))
-                || (player.currOption == "Item" && player.currItem.name == "");
+        bool deciding = (playerStats[uIndex].currOption.Length <= 0)
+                || (playerStats[uIndex].currOption == "Attack" && (playerStats[uIndex].currEnemy == null || playerStats[uIndex].currSkills.Count == 0))
+                || (playerStats[uIndex].currOption == "Skills" && (playerStats[uIndex].currEnemy == null || playerStats[uIndex].currSkills.Count < chainLength))
+                || (playerStats[uIndex].currOption == "Item" && playerStats[uIndex].currItem.name == "");
+        Debug.Log(deciding);
         while (deciding)
         {
+            Debug.Log("In deciding loop");
             yield return null;
-            deciding = (player.currOption.Length <= 0)
-                || (player.currOption == "Attack" && (player.currEnemy == null || player.currSkills.Count == 0))
-                || (player.currOption == "Skills" && (player.currEnemy == null || player.currSkills.Count < chainLength))
-                || (player.currOption == "Item" && player.currItem.name == "");
+            deciding = (playerStats[uIndex].currOption.Length <= 0)
+                || (playerStats[uIndex].currOption == "Attack" && (playerStats[uIndex].currEnemy == null || playerStats[uIndex].currSkills.Count == 0))
+                || (playerStats[uIndex].currOption == "Skills" && (playerStats[uIndex].currEnemy == null || playerStats[uIndex].currSkills.Count < chainLength))
+                || (playerStats[uIndex].currOption == "Item" && playerStats[uIndex].currItem.name == "");
+            Debug.Log("Deciding " + deciding);
         }
 
         // Deactivates the skills/items panels for each player unit after their turn
@@ -502,5 +600,145 @@ public class CombatStateM : MonoBehaviour
     {
         string text = battleLog.text;
         battleLog.text = string.Concat(text.Remove(0, text.IndexOf("\n") + 1), textToAdd, "\n");
+    }
+
+    public void ChooseSkills()
+    {
+        for (int i = 0; i < enemyStats[uIndex].skillList.Count; i++)
+        {
+            if (CheckSkill(i))
+            {
+                AddSkill(i);
+                enemyStats[uIndex].currOption = "Skills";
+                AddBattleLog("The enemy attacked with " + enemyStats[uIndex].skillList[i].name + "!");
+                return;
+            }
+        }
+    }
+
+    public void AddSkill(int ind)
+    {
+        enemyStats[uIndex].currSkills.Push(enemyStats[uIndex].skillList[ind]);
+    }
+
+    public bool CheckSkill(int ind)
+    {
+        //Debug.Log("uIndex when checking skill " + uIndex);
+        if (enemyStats[uIndex].stamina >= enemyStats[uIndex].skillList[ind].SPCost)
+            return true;
+        else
+            return false;
+    }
+
+    public void SetTarget()
+    {
+        int n = playerStats.Count;
+        double[] weight = new double[3]; //Currently not used
+        int index = 0;
+        int rand = Random.Range(0, 101);
+        switch (n)
+        {
+            case 1:
+                weight[0] = 1;
+                index = 0;
+                break;
+            case 2:
+                if (rand > 50)
+                {
+                    index = 1;
+                }
+                else
+                {
+                    index = 0;
+                }
+                weight[0] = .5;
+                weight[1] = .5;
+                break;
+            case 3:
+                if (rand > 70)
+                {
+                    index = 2;
+                }
+                else if (rand > 40)
+                {
+                    index = 1;
+                }
+                else
+                {
+                    index = 0;
+                }
+                weight[0] = .4;
+                weight[1] = .3;
+                weight[2] = .3;
+                break;
+
+        }
+
+        enemyStats[uIndex].currEnemy = playerStats[index];
+    }
+
+    public void BasicAttack()
+    {
+        //CombatStateMachine.GetComponent<CombatStateM>().movePower = 5;
+        enemyStats[uIndex].currSkills.Push(new Skill("Attack", "Damage", 10, 0, 0));
+        enemyStats[uIndex].currOption = "Attack";
+        AddBattleLog("The enemy strikes");
+        Debug.Log("Enemy basic attack");
+    }
+
+    public void ChooseOption()
+    {
+        //EnemyStats = enemy;
+        SetTarget();
+        AddBattleLog("The Enemy is Contemplating...");
+        //PlayerStats playerTarget = new PlayerStats();
+
+        int[] rootWeights = { 30, 70 };
+
+        //List<Node> targets = new List<Node>();
+        //targets.Add(new Target(setTarget, playerTarget));
+        //targets.Add(new Target(setTarget, playerTarget));
+        //targets.Add(new Target(setTarget, playerTarget));
+        //Selector target = new Selector(targets);
+
+        List<Node> level2 = new List<Node>();
+        List<Node> level3_1 = new List<Node>();
+        List<Node> level3_2 = new List<Node>();
+        level3_1.Add(new Call(ChooseSkills));
+        level2.Add(new IfInt(CheckSkill, 0, level3_1));
+        level2.Add(new Call(BasicAttack));
+        //level3_1.Add(new Call(DebuffDefense));
+        //level3_2.Add(new Call(Shoot));
+        //level2.Add(new If(PlayerBuffedDefense, level3_1));
+
+        //RandomSelector Root = new RandomSelector(2, level2, rootWeights);
+        Selector Root = new Selector(level2);
+
+        /*Current implementation: First check if player buffed defense.  If yes, debuff defense defense.  If no, attack
+        */
+
+        //if (PlayerStats.GetComponent<UnitStats>().defense > 10)
+        //{
+        //    CombatStateMachine.GetComponent<CombatStateM>().movePower = 0;
+        //    PlayerStats.GetComponent<UnitStats>().defense = PlayerStats.GetComponent<UnitStats>().defense / 2;
+        //    StatusWindowText.text = "The enemy screeched, lowering your defense";
+        //}
+        //else
+        //{
+        //    CombatStateMachine.GetComponent<CombatStateM>().movePower = 5;
+        //    StatusWindowText.text = "The enemy strikes";
+
+        //}
+
+        //if (target.Evaluate() == Node.NodeStates.SUCCESS)
+        //{
+        Debug.Log("pre root evaluate");
+        if (Root.Evaluate() == Node.NodeStates.SUCCESS)
+        {
+            //currState = CombatState.EnemyCombat;
+        }
+        //}
+
+
     }
 }
