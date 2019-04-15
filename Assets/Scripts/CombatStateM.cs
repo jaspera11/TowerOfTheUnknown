@@ -188,25 +188,34 @@ public class CombatStateM : MonoBehaviour
                     //Debug.Log(uIndex);
 
                     // If item chosen, use it, and then choose another option
-                    if (playerStats[uIndex].currOption == "Item")
+                    if (playerStats[uIndex].currOption == "Item" && playerStats[uIndex].currItem.name != "")
                     {
                         //Debug.Log("Item check");
                         UseItem(playerStats[uIndex]);
+                        playerStats[uIndex].currItem.name = "";
                         return;
                     }
-
                     playerStats[uIndex].itemUsed = false;   // Reverts itemUsed after turn ends
+
+
                     bool deciding = (playerStats[uIndex].currOption.Length <= 0)
                 || (playerStats[uIndex].currOption == "Attack" && (playerStats[uIndex].currEnemy == null || playerStats[uIndex].currSkills.Count == 0))
                 || (playerStats[uIndex].currOption == "Skills" && (playerStats[uIndex].currEnemy == null || playerStats[uIndex].currSkills.Count < chainLength))
-                || (playerStats[uIndex].currOption == "Item" && playerStats[uIndex].currItem.name == "");
+                || (playerStats[uIndex].currOption == "Item" && playerStats[uIndex].currItem.name == "");    
                     //Debug.Log(deciding);
                     if (!deciding)
                     {
                         uIndex++;
                     }
                     //uIndex++;                               // Switches to next player
+
+                    
+
+                    
                 }
+
+                
+
                 break;
 
             // Executes player decisions
@@ -467,8 +476,85 @@ public class CombatStateM : MonoBehaviour
                     // TODO: [ Fill in cases as necessary for what to do for utility skills ]
                     // [ Placeholder ]
                     case "Barrier":
-                        playerStats[uIndex].defense *= 2;
-                        AddBattleLog(playerStats[uIndex].charName + "'s defense is doubled!");
+                        //increase party defense
+                        for (int i = 0; i < playerStats.Count; i++)
+                        {
+                            playerStats[i].defense *= 2;
+                        }
+                        AddBattleLog("The team's defense has doubled!");
+                        break;
+                    case "Magnify":
+                        //increase party attack
+                        for (int i = 0; i < playerStats.Count; i++)
+                        {
+                            playerStats[i].attack += 10;
+                        }
+                        AddBattleLog("The team's attack has increased!");
+                        break;
+                    case "Gravity":
+                        //decrease enemy party defense
+                        for (int i = 0; i < enemyStats.Count; i++)
+                        {
+                            enemyStats[i].defense = Mathf.Ceil(enemyStats[i].defense / 2);
+                        }
+                        AddBattleLog("The enemy team's defense has decreased!");
+                        break;
+                    case "Bio-Drug":
+                        //Heal party
+                        for (int i = 0; i < playerStats.Count; i++)
+                        {
+                            playerStats[i].health += (int).33 * playerStats[i].health;
+                        }
+                        AddBattleLog("The team's health has recovered!");
+                        break;
+                    case "Smoke Bomb":
+                        //Decrease enemy crit chance
+                        for (int i = 0; i < enemyStats.Count; i++)
+                        {
+                            enemyStats[i].luck = Mathf.Ceil(enemyStats[i].luck / 2);
+                        }
+                        AddBattleLog("The enemy team's crit chance has decreased!");
+                        break;
+                    case "Flash":
+                        //Decrease enemy party attack
+                        for (int i = 0; i < enemyStats.Count; i++)
+                        {
+                            enemyStats[i].attack = Mathf.Ceil(enemyStats[i].attack / 2);
+                        }
+                        AddBattleLog("The enemy team's attack has decreased!");
+                        break;
+                    case "Superspeed Guard":
+                        //increase party defense, decrease enemy party attack
+                        for (int i = 0; i < playerStats.Count; i++)
+                        {
+                            playerStats[i].defense *= 2;
+                        }
+                        for (int i = 0; i < enemyStats.Count; i++)
+                        {
+                            enemyStats[i].attack = Mathf.Ceil(enemyStats[i].attack / 2);
+                        }
+                        AddBattleLog("Your party's defense has increased and the enemy team's attack has decreased!");
+                        break;
+                    case "Acceleration":
+                        //increase party speed
+                        for (int i = 0; i < playerStats.Count; i++)
+                        {
+                            playerStats[i].speed *= 2;
+                        }
+                        AddBattleLog("The team's speed has increased!");
+                        break;
+
+                    case "Speed Mirage":
+                        //Increase party's luck, decrease enemy's luck
+                        for (int i = 0; i < playerStats.Count; i++)
+                        {
+                            playerStats[i].luck *= 2;
+                        }
+                        for (int i = 0; i < enemyStats.Count; i++)
+                        {
+                            enemyStats[i].luck = Mathf.Ceil(enemyStats[i].luck / 2);
+                        }
+                        AddBattleLog("Your party's crit chance has increased and the enemy team's crit chance has decreased!");
                         break;
                     default:
                         break;
@@ -483,15 +569,28 @@ public class CombatStateM : MonoBehaviour
 
     // Use the item in currItem
     private void UseItem(PlayerStats stats)
-    {
-        // TODO: [ Fill in cases as necessary for what to do for each item ]
-        // TODO: [ Do animation for each item]
+    { 
         switch (stats.currItem.name)
         {
             // [ Placeholder ]
             case "Heal":
                 stats.health = stats.maxHealth;
                 AddBattleLog("You fully recovered health!");
+                break;
+            case "Energy":
+                stats.stamina += (int).25 * stats.maxStamina;
+                break;
+            case "Atk Boost":
+                stats.attack += 10;
+                break;
+            case "Def Boost":
+                stats.defense += 10;
+                break;
+            case "Spd Boost":
+                stats.speed += 10;
+                break;
+            case "Crit Boost":
+                stats.luck += 10;
                 break;
             default:
                 break;
