@@ -19,6 +19,9 @@ public class PlayerPhaseState : MonoBehaviour
     [SerializeField] private CombatStateM stateMachine;                      // Reference to state machine and variables
     [SerializeField] private const int attackPower = 10;    // The power of the move "Attack"
     //[SerializeField] private Text playerHealth, playerStamina, enemyHealth, enemyStamina;
+    public Text chainconfirm1;
+    public Text chainconfirm2;
+    public Text chainconfirm3;
 
     private void Update()
     {
@@ -30,6 +33,9 @@ public class PlayerPhaseState : MonoBehaviour
         //playerStamina.text = player.stamina.ToString() + " / " + player.maxStamina.ToString();
         //enemyHealth.text = player.currEnemy.health.ToString() + " / " + player.currEnemy.maxHealth.ToString();
         //enemyStamina.text = player.currEnemy.stamina.ToString() + " / " + player.currEnemy.maxStamina.ToString();
+        chainconfirm1.text = stateMachine.playerStats[stateMachine.uIndex].currSkills.Count + "/" + stateMachine.chainLength;
+        chainconfirm2.text = stateMachine.playerStats[stateMachine.uIndex].currSkills.Count + "/" + stateMachine.chainLength;
+        chainconfirm3.text = stateMachine.playerStats[stateMachine.uIndex].currSkills.Count + "/" + stateMachine.chainLength;
     }
 
     public void AttackButton()
@@ -64,10 +70,11 @@ public class PlayerPhaseState : MonoBehaviour
     public void SkillChain()
     {
         PlayerStats player = stateMachine.playerStats[stateMachine.uIndex];
-        if(player.currSkills.Count <= 0)
+        if (player.currSkills.Count <= 0)
         {
             return;
-        } else
+        }
+        else
         {
             stateMachine.skillChainR = true;
         }
