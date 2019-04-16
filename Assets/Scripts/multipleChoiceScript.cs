@@ -12,20 +12,20 @@ public class multipleChoiceScript : MonoBehaviour
     public int ChoiceMade;
 
     public void ChoiceOption1() {
-        TextBox.GetComponent<Text>().text = "A";
+        TextBox.GetComponent<Text>().text = "Wrong answer!";
         ChoiceMade = 1;
     }
 
 
     public void ChoiceOption2()
     {
-        TextBox.GetComponent<Text>().text = "B";
+        TextBox.GetComponent<Text>().text = "Correct!";
         ChoiceMade = 2;
     }
 
     public void ChoiceOption3()
     {
-        TextBox.GetComponent<Text>().text = "C";
+        TextBox.GetComponent<Text>().text = "Wrong answer!";
         ChoiceMade = 3;
     }
 
@@ -41,9 +41,6 @@ public class multipleChoiceScript : MonoBehaviour
             Choice01.SetActive(false);
             Choice02.SetActive(false);
             Choice03.SetActive(false);
-
-
-
         }
         
     }
