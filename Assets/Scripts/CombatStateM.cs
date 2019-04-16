@@ -28,12 +28,13 @@ public class CombatStateM : MonoBehaviour
     private bool mainCharDefeated;          // True if the main character (playerStats[0]) is defeated
     public bool fleeAttempted;             // True if a flee has been attempted for the battle
     public bool skillChainR;
+    public int chainLength;
 
     // UI elements
     public List<GameObject> skillsPanels;
     public GameObject itemPanel;
     [SerializeField] private Text battleLog;
-    [SerializeField] private Button attackButton, skillsButton, itemButton, fleeButton, skillChainButton;
+    [SerializeField] private Button attackButton, skillsButton, itemButton, fleeButton, skillChainButton1, skillChainButton2, skillChainButton3;
     [SerializeField] private List<Button> itemButtons;
     [SerializeField] private List<Button> skillButtons1, skillButtons2, skillButtons3;
     [SerializeField] private Text playerHealth, playerStamina, enemyHealth, enemyStamina;
@@ -129,6 +130,7 @@ public class CombatStateM : MonoBehaviour
         // Player1SP.text = "SP: " + PlayerStats.GetComponent<UnitStats>().stamina + "/" + PlayerStats.GetComponent<UnitStats>().maxstamina;
         // Enemy1HP.text = "HP: " + EnemyStats.GetComponent<UnitStats>().health + "/" + EnemyStats.GetComponent<UnitStats>().maxhealth;
         // Enemy1SP.text = "SP: " + EnemyStats.GetComponent<UnitStats>().health + "/" + EnemyStats.GetComponent<UnitStats>().maxhealth;
+        chainLength = 1; 
     }
 
     private void Update()
@@ -160,8 +162,9 @@ public class CombatStateM : MonoBehaviour
                     //PlayerStats player = playerStats[uIndex];
 
                     itemButton.interactable = (playerStats[uIndex].itemUsed) ? false : true;    // itemUsed == true --> can't click on "Item"
-                    skillChainButton.interactable = (playerStats[uIndex].currSkills.Count > 0);
-
+                    skillChainButton1.interactable = (playerStats[uIndex].currSkills.Count > 0);
+                    skillChainButton2.interactable = (playerStats[uIndex].currSkills.Count > 0);
+                    skillChainButton3.interactable = (playerStats[uIndex].currSkills.Count > 0);
                     // If count of item is 0, can't click on that item
                     // Items in inventory must have same index as items in item button list!! -------------- fixable later?
                     //Debug.Log("Before item button loop");
@@ -185,7 +188,7 @@ public class CombatStateM : MonoBehaviour
                     playerStats[uIndex].currEnemy = enemyStats[0];  // Default current enemy is the first enemy
 
                     // Calculate how many skills player can use
-                    int chainLength = 1;
+                    chainLength = 1;
                     for (int i = PlayerPrefab.gameData.spdTH.Length - 1; i >= 0; i--)
                     {
                         if (playerStats[uIndex].speed < PlayerPrefab.gameData.spdTH[i] || playerStats[uIndex].skill < PlayerPrefab.gameData.sklTH[i])
@@ -220,17 +223,17 @@ public class CombatStateM : MonoBehaviour
                         return;
                     }
                     playerStats[uIndex].itemUsed = false;   // Reverts itemUsed after turn ends
-                    
-                    if(playerStats[uIndex].currOption == "Flee" && !fleeAttempted)
+
+                    if (playerStats[uIndex].currOption == "Flee" && !fleeAttempted)
                     {
                         AttemptFlee();
                     }
 
                     bool deciding = (playerStats[uIndex].currOption.Length <= 0)
                 || (playerStats[uIndex].currOption == "Attack" && (playerStats[uIndex].currEnemy == null || playerStats[uIndex].currSkills.Count == 0))
-                || (playerStats[uIndex].currOption == "Skills" && (playerStats[uIndex].currEnemy == null || playerStats[uIndex].currSkills.Count < chainLength))
+                || (playerStats[uIndex].currOption == "Skills" && (playerStats[uIndex].currEnemy == null || (playerStats[uIndex].currSkills.Count < chainLength && !skillChainR)))
                 || (playerStats[uIndex].currOption == "Item" && playerStats[uIndex].currItem.name == "")
-                || playerStats[uIndex].currOption == "Flee" || !skillChainR;    
+                || playerStats[uIndex].currOption == "Flee";
                     //Debug.Log(deciding);
                     if (!deciding)
                     {
@@ -247,7 +250,7 @@ public class CombatStateM : MonoBehaviour
 
                 }
 
-                
+
 
                 break;
 
@@ -265,7 +268,7 @@ public class CombatStateM : MonoBehaviour
                     switch (playerStats[uIndex].currOption)
                     {
                         case "Attack":
-                            
+
                         case "Skills":
                             UseSkill(playerStats[uIndex]); // Use skills, damage enemies, gain exp if enemy defeated
 
@@ -404,7 +407,7 @@ public class CombatStateM : MonoBehaviour
         //Debug.Log(player_disp.currEnemy.health.ToString());
         //Debug.Log(player_disp.currEnemy.);
         UnitStats player_disp;
-        if(playerp)
+        if (playerp)
         {
             player_disp = playerStats[uIndex];
             playerHealth.text = player_disp.health.ToString() + " / " + player_disp.maxHealth.ToString();
@@ -412,7 +415,8 @@ public class CombatStateM : MonoBehaviour
             //Debug.Log(player_disp.charName);
             enemyHealth.text = player_disp.currEnemy.health.ToString() + " / " + player_disp.currEnemy.maxHealth.ToString();
             enemyStamina.text = player_disp.currEnemy.stamina.ToString() + " / " + player_disp.currEnemy.maxStamina.ToString();
-        } else
+        }
+        else
         {
             player_disp = playerStats[0];
             playerHealth.text = player_disp.health.ToString() + " / " + player_disp.maxHealth.ToString();
@@ -420,7 +424,7 @@ public class CombatStateM : MonoBehaviour
             enemyHealth.text = player_disp.currEnemy.health.ToString() + " / " + player_disp.currEnemy.maxHealth.ToString();
             enemyStamina.text = player_disp.currEnemy.stamina.ToString() + " / " + player_disp.currEnemy.maxStamina.ToString();
         }
-        
+
     }
 
     /*
@@ -535,12 +539,18 @@ public class CombatStateM : MonoBehaviour
             return;
         }
 
+        GameObject skillParticle;
         Skill skill = stats.currSkills.Pop();       // Get the top skill and remove it from the stack
         stats.stamina -= skill.SPCost;              // Subtracts SPCost from unit's stamina
         switch (skill.type)
         {
             // If it's a damaging skill, damage (and possibly defeat) the opponent, gain experience
             case "Damage":
+                switch (skill.name)
+                {
+                    //skillParticle = electricAttack;
+                    //electricAttack.GetComponent<ParticleMotion>().PlaySkillAnim();
+                }
                 Damage(stats, skill.power);
                 break;
             // If it's a utility skill, use a custom effect
@@ -638,12 +648,13 @@ public class CombatStateM : MonoBehaviour
                 break;
         }
 
+        //skillParticle.GetComponent<ParticleMotion>().PlaySkillAnim();
         // TODO: [ Do skill animation ]
     }
 
     // Use the item in currItem
     private void UseItem(PlayerStats stats)
-    { 
+    {
         switch (stats.currItem.name)
         {
             // [ Placeholder ]
@@ -747,7 +758,7 @@ public class CombatStateM : MonoBehaviour
         {
             AddBattleLog("Flee failed!  Escape is no longer an option");
         }
-            
+
         fleeAttempted = true;
     }
 

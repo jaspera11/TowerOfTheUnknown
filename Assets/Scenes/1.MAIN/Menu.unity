@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.022403134, g: 0.036430173, b: 0.07919187, a: 1}
+  m_IndirectSpecularColor: {r: 0.02240311, g: 0.036430154, b: 0.07919175, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -462,6 +462,107 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &866603318
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 866603319}
+  - component: {fileID: 866603320}
+  m_Layer: 0
+  m_Name: Player3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &866603319
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 866603318}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1730638475}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &866603320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 866603318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21ed30bc38612394e8d6933ce05070f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charName: Chad
+  level: 1
+  skillList:
+  - name: Straight Drive
+    type: Damage
+    power: 30
+    SPCost: 20
+    skillReq: 10
+  - name: Rear Straight
+    type: Damage
+    power: 40
+    SPCost: 30
+    skillReq: 20
+  - name: Straight Overdrive
+    type: Damage
+    power: 70
+    SPCost: 50
+    skillReq: 30
+  - name: Rear Overdrive
+    type: Damage
+    power: 80
+    SPCost: 65
+    skillReq: 40
+  - name: Supersonic Thrash
+    type: Damage
+    power: 100
+    SPCost: 80
+    skillReq: 50
+  - name: Superspeed Guard
+    type: Utility
+    power: 0
+    SPCost: 20
+    skillReq: 10
+  - name: Acceleration
+    type: Utility
+    power: 0
+    SPCost: 30
+    skillReq: 30
+  - name: Speed Mirage
+    type: Utility
+    power: 0
+    SPCost: 35
+    skillReq: 45
+  health: 1000
+  maxHealth: 1000
+  stamina: 100
+  maxStamina: 100
+  attack: 35
+  defense: 20
+  speed: 45
+  luck: 50
+  currOption: 
+  currEnemy: {fileID: 0}
+  currItem:
+    name: 
+    count: 0
+  itemUsed: 0
+  skill: 30
 --- !u!1001 &883360446
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -874,6 +975,58 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ed6b6c17b774774daf8654eea72b4b9, type: 3}
+--- !u!1 &1730638473
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1730638475}
+  - component: {fileID: 1730638474}
+  m_Layer: 0
+  m_Name: Players
+  m_TagString: PlayerData
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1730638474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730638473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29d37bda8b04c504ca43101e18088c23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  players:
+  - {fileID: 2123223725}
+  - {fileID: 0}
+  prevSceneIndex: 0
+  playerLocation: {fileID: 0}
+  inventory: []
+--- !u!4 &1730638475
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730638473}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 477.32938, y: 204.4758, z: -5.125}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 2123223726}
+  - {fileID: 1774484035}
+  - {fileID: 866603319}
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1749336060
 GameObject:
   m_ObjectHideFlags: 0
@@ -1051,6 +1204,107 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1774484034
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1774484035}
+  - component: {fileID: 1774484036}
+  m_Layer: 0
+  m_Name: Player2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1774484035
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1774484034}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1730638475}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1774484036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1774484034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21ed30bc38612394e8d6933ce05070f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charName: Gabe
+  level: 1
+  skillList:
+  - name: Thrown Edge
+    type: Damage
+    power: 30
+    SPCost: 20
+    skillReq: 10
+  - name: Poisoned Smoke
+    type: Damage
+    power: 40
+    SPCost: 30
+    skillReq: 20
+  - name: Mini Explosive
+    type: Damage
+    power: 70
+    SPCost: 50
+    skillReq: 30
+  - name: Freezing Spray
+    type: Damage
+    power: 80
+    SPCost: 65
+    skillReq: 40
+  - name: Plasma Blaster
+    type: Damage
+    power: 100
+    SPCost: 80
+    skillReq: 50
+  - name: Bio-Drug
+    type: Utility
+    power: 0
+    SPCost: 20
+    skillReq: 10
+  - name: Smoke Bomb
+    type: Utility
+    power: 0
+    SPCost: 30
+    skillReq: 30
+  - name: Flash
+    type: Utility
+    power: 0
+    SPCost: 35
+    skillReq: 45
+  health: 1000
+  maxHealth: 1000
+  stamina: 100
+  maxStamina: 100
+  attack: 35
+  defense: 20
+  speed: 45
+  luck: 50
+  currOption: 
+  currEnemy: {fileID: 0}
+  currItem:
+    name: 
+    count: 0
+  itemUsed: 0
+  skill: 30
 --- !u!1 &1848430712
 GameObject:
   m_ObjectHideFlags: 0
@@ -1218,3 +1472,104 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!1 &2123223724
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2123223726}
+  - component: {fileID: 2123223725}
+  m_Layer: 0
+  m_Name: Player1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2123223725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2123223724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21ed30bc38612394e8d6933ce05070f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charName: Jade
+  level: 1
+  skillList:
+  - name: Psy-Throw
+    type: Damage
+    power: 30
+    SPCost: 20
+    skillReq: 10
+  - name: Tear
+    type: Damage
+    power: 40
+    SPCost: 30
+    skillReq: 20
+  - name: Kinetic Flame
+    type: Damage
+    power: 70
+    SPCost: 50
+    skillReq: 30
+  - name: Kinetic Shock
+    type: Damage
+    power: 80
+    SPCost: 65
+    skillReq: 40
+  - name: Psy-Blast
+    type: Damage
+    power: 100
+    SPCost: 80
+    skillReq: 50
+  - name: Barrier
+    type: Utility
+    power: 0
+    SPCost: 20
+    skillReq: 10
+  - name: Magnify
+    type: Utility
+    power: 0
+    SPCost: 30
+    skillReq: 30
+  - name: Gravity
+    type: Utility
+    power: 0
+    SPCost: 35
+    skillReq: 45
+  health: 1000
+  maxHealth: 1000
+  stamina: 100
+  maxStamina: 100
+  attack: 35
+  defense: 20
+  speed: 45
+  luck: 50
+  currOption: 
+  currEnemy: {fileID: 0}
+  currItem:
+    name: 
+    count: 0
+  itemUsed: 0
+  skill: 30
+--- !u!4 &2123223726
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2123223724}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1730638475}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
