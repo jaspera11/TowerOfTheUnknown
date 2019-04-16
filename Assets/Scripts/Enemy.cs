@@ -39,6 +39,7 @@ public class Enemy : MonoBehaviour
         {
             //PlayerPrefab.gameData.prevSceneIndex = SceneManager.GetActiveScene().buildIndex;    // Saves the previous scene
             //PlayerPrefab.gameData.playerLocation = other.transform;                             // Saves player position in overworld
+            Debug.Log("Collided with player");
             GameObject.Find("Players").GetComponent<PlayerPrefab>().enemyName = enemyData.name;
             SceneManager.LoadScene(battleScene);                                                // Load battle scene
         }

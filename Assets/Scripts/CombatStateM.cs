@@ -33,12 +33,13 @@ public class CombatStateM : MonoBehaviour
     // UI elements
     public List<GameObject> skillsPanels;
     public GameObject itemPanel;
-    [SerializeField] private Text battleLog;
+    [SerializeField] public Text battleLog;
     [SerializeField] private Button attackButton, skillsButton, itemButton, fleeButton, skillChainButton1, skillChainButton2, skillChainButton3;
     [SerializeField] private List<Button> itemButtons;
     [SerializeField] private List<Button> skillButtons1, skillButtons2, skillButtons3;
     [SerializeField] private Text playerHealth, playerStamina, enemyHealth, enemyStamina;
     [SerializeField] private GameObject bexplosion, snowflake, wflash, smoke, wexplosion, electric, fire, rflash;
+
     private List<List<Button>> skillButtons;
 
     /*
@@ -74,10 +75,10 @@ public class CombatStateM : MonoBehaviour
         playerStats = GameObject.FindGameObjectWithTag("PlayerData").GetComponent<PlayerPrefab>().players;  
         
         // References the persistent list of enemy units
-        enemyStats = GameObject.Find(GameObject.FindGameObjectWithTag("PlayerData").GetComponent<PlayerPrefab>().enemyName).GetComponent<EnemyPrefab>().enemies;
+        //enemyStats = GameObject.Find(GameObject.FindGameObjectWithTag("PlayerData").GetComponent<PlayerPrefab>().enemyName).GetComponent<EnemyPrefab>().enemies;
 
         //To be used when testing
-        //enemyStats = GameObject.FindGameObjectWithTag("EnemyData").GetComponent<EnemyPrefab>().enemies;
+        enemyStats = GameObject.FindGameObjectWithTag("EnemyData").GetComponent<EnemyPrefab>().enemies;
         
         //Debug.Log("Found enemies");
         //Debug.Log(enemyStats.Count);
@@ -244,6 +245,12 @@ public class CombatStateM : MonoBehaviour
                     //Debug.Log(deciding);
                     if (!deciding)
                     {
+                        // Deactivates the skills/items panels for each player unit after their turn
+                        foreach (GameObject panel in skillsPanels)
+                        {
+                            panel.SetActive(false);
+                        }
+                        itemPanel.SetActive(false);
                         skillChainR = false;
                         uIndex++;
                     }
@@ -760,17 +767,22 @@ public class CombatStateM : MonoBehaviour
         {
             stats.currEnemy.health = 0; // Health == 0 --> player/enemy is defeated
             AddBattleLog(stats.currEnemy.charName + " was defeated!");
+            //return;
             // If it's the player's turn, remove the enemy and gain experience
             if (currState == CombatState.PlayerCombat)
             {
                 UnitStats enemy = stats.currEnemy;              // Gets the enemy unit
                 float exp = expGain[enemyStats.IndexOf(enemy)]; // Gets the enemy exp value from a list (calculated at beginning)
                 enemySprites[enemyStats.IndexOf(enemy)].SetActive(false);
+                enemySprites.Remove(enemySprites[enemyStats.IndexOf(enemy)]);
+                //return;
                 enemyStats.Remove(enemy);                       // Removes enemy unit from enemyStats list
+                //return;
                 AddBattleLog("Players gained " + exp + " experience!");
                 // Have (all) the players gain experience, level up if necessary
                 foreach (PlayerStats player in playerStats)
                 {
+                    //player.currEnemy = enemyStats[0];
                     player.AddExperience(exp);
                 }
             }

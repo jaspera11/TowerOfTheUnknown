@@ -8,7 +8,7 @@ public class PlayerStats : UnitStats
     public Item currItem;           // Item that player unit is about to use
     public bool itemUsed = false;   // True if item has been used for that turn
     private float experience = 0;   // Current experience for a level
-    private float maxExp;           // Max experience for a level required to level up
+    private float maxExp = 100;           // Max experience for a level required to level up
     private int maxLevel = 10;      // Maximum level (cannot level up after)
     public int skill;               // Determines whether certain skills can be used
 

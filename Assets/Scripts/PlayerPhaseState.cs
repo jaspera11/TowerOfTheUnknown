@@ -22,6 +22,7 @@ public class PlayerPhaseState : MonoBehaviour
     public Text chainconfirm1;
     public Text chainconfirm2;
     public Text chainconfirm3;
+    public string holder;
 
     private void Update()
     {
@@ -116,6 +117,18 @@ public class PlayerPhaseState : MonoBehaviour
             return;
         player.currEnemy = stateMachine.enemyStats[index];
     }
+    public void ptrenter(int index)
+    {
+        holder = stateMachine.battleLog.text;
+        PlayerStats player = stateMachine.playerStats[stateMachine.uIndex];
+        Skill skill = player.skillList[index];
+        stateMachine.battleLog.text = skill.name + ": \n" + "PWR: " + skill.power + " SP: " + skill.SPCost;
+    }
+    public void ptrexit()
+    {
+        stateMachine.battleLog.text = holder;
+    }
+
 }
 
 /*
