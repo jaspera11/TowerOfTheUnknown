@@ -38,7 +38,7 @@ public class CombatStateM : MonoBehaviour
     [SerializeField] private List<Button> itemButtons;
     [SerializeField] private List<Button> skillButtons1, skillButtons2, skillButtons3;
     [SerializeField] private Text playerHealth, playerStamina, enemyHealth, enemyStamina;
-    [SerializeField] private GameObject explosion, snowflake, flash, smoke;
+    [SerializeField] private GameObject bexplosion, snowflake, wflash, smoke, wexplosion, electric, fire, rflash;
     private List<List<Button>> skillButtons;
 
     /*
@@ -555,11 +555,53 @@ public class CombatStateM : MonoBehaviour
             case "Damage":
                 switch (skill.name)
                 {
-                    case "Name":
-                        //explosion.GetComponent<ParticleMotion>().PlaySkillAnim();
+                    case "Psy-Throw":
+                        wexplosion.GetComponent<ParticleMotion>().PlaySkillAnim();
                         break;
-                    //skillParticle = electricAttack;
-                    //electricAttack.GetComponent<ParticleMotion>().PlaySkillAnim();
+                    case "Tear":
+                        bexplosion.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        break;
+                    case "Kinetic Flame":
+                        fire.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        break;
+                    case "Kinetic Shock":
+                        electric.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        break;
+                    case "Psy-Blast":
+                        bexplosion.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        break;
+                    case "Thrown Edge":
+                        wexplosion.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        break;
+                    case "Mini Explosive":
+                        wexplosion.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        break;
+                    case "Poisoned Smoke":
+                        smoke.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        break;
+                    case "Freezing Spray":
+                        snowflake.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        break;
+                    case "Plasma Blaster":
+                        rflash.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        break;
+                    case "Straight Dive":
+                        wflash.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        break;
+                    case "Rear Straight":
+                        bexplosion.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        break;
+                    case "Straight Overdrive":
+                        wflash.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        break;
+                    case "Rear Overdrive":
+                        electric.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        break;
+                    case "Supersonic Thrash":
+                        rflash.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        break;
+                        //skillParticle = electricAttack;
+                        //electricAttack.GetComponent<ParticleMotion>().PlaySkillAnim();
                 }
                 Damage(stats, skill.power);
                 break;
@@ -602,6 +644,7 @@ public class CombatStateM : MonoBehaviour
                         AddBattleLog("The team's health has recovered!");
                         break;
                     case "Smoke Bomb":
+                        smoke.GetComponent<ParticleMotion>().PlaySkillAnim();
                         //Decrease enemy crit chance
                         for (int i = 0; i < enemyStats.Count; i++)
                         {
@@ -610,6 +653,7 @@ public class CombatStateM : MonoBehaviour
                         AddBattleLog("The enemy team's crit chance has decreased!");
                         break;
                     case "Flash":
+                        wflash.GetComponent<ParticleMotion>().PlaySkillAnim();
                         //Decrease enemy party attack
                         for (int i = 0; i < enemyStats.Count; i++)
                         {
