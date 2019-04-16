@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] Transform[] points;
     [SerializeField] int battleScene = 1;
+    [SerializeField] public EnemyPrefab enemyData;
     // private Rigidbody rb;
     private BoxCollider boxCollider;
     // Start is called before the first frame update
@@ -38,6 +39,7 @@ public class Enemy : MonoBehaviour
         {
             //PlayerPrefab.gameData.prevSceneIndex = SceneManager.GetActiveScene().buildIndex;    // Saves the previous scene
             //PlayerPrefab.gameData.playerLocation = other.transform;                             // Saves player position in overworld
+            GameObject.Find("Players").GetComponent<PlayerPrefab>().enemyName = enemyData.name;
             SceneManager.LoadScene(battleScene);                                                // Load battle scene
         }
     }
