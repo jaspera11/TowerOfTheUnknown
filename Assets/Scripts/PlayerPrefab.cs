@@ -15,6 +15,7 @@ public class PlayerPrefab : MonoBehaviour
     public readonly int[] spdTH = { 50, 120 };      // Speed thresholds for chaining attacks
     public readonly float[] sklTH = { 25, 50 };     // Skill thresholds for chaining attacks
     public List<Item> inventory;                    // List of items currently held
+    public string enemyName;                        // Name of enemy player collided with to battle 
 
     // Prevents duplicate players
     private void Awake()

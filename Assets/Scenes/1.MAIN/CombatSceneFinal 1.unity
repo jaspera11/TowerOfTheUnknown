@@ -1054,7 +1054,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!82 &120708769
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2229,12 +2229,6 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: b95ca2f9c1c774edb97d824ead110f3b, type: 2}
-    - target: {fileID: 3969912645974277241, guid: 86e406c40bfd73b44a18b9111f898ac6,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 0e640aae056fe46bcb40e63e5ed8169c,
-        type: 3}
     - target: {fileID: 3969912645974277243, guid: 86e406c40bfd73b44a18b9111f898ac6,
         type: 3}
       propertyPath: m_Enabled
@@ -2250,6 +2244,12 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3969912645974277241, guid: 86e406c40bfd73b44a18b9111f898ac6,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 0e640aae056fe46bcb40e63e5ed8169c,
+        type: 3}
     m_RemovedComponents:
     - {fileID: 3969912645974277242, guid: 86e406c40bfd73b44a18b9111f898ac6, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 86e406c40bfd73b44a18b9111f898ac6, type: 3}
@@ -2724,12 +2724,6 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: c8820b00b48fe4ef1879547d0e6d9d1e, type: 2}
-    - target: {fileID: 3969912645974277241, guid: 86e406c40bfd73b44a18b9111f898ac6,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: df39f16d9ef404efa87311588410eed0,
-        type: 3}
     - target: {fileID: 3969912645974277243, guid: 86e406c40bfd73b44a18b9111f898ac6,
         type: 3}
       propertyPath: m_Enabled
@@ -2745,6 +2739,12 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3969912645974277241, guid: 86e406c40bfd73b44a18b9111f898ac6,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: df39f16d9ef404efa87311588410eed0,
+        type: 3}
     m_RemovedComponents:
     - {fileID: 3969912645974277242, guid: 86e406c40bfd73b44a18b9111f898ac6, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 86e406c40bfd73b44a18b9111f898ac6, type: 3}
@@ -6009,7 +6009,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1021332536
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7396,7 +7396,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1349214038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7415,6 +7415,7 @@ MonoBehaviour:
   prevSceneIndex: 0
   playerLocation: {fileID: 0}
   inventory: []
+  enemyName: 
 --- !u!4 &1349214039
 Transform:
   m_ObjectHideFlags: 0

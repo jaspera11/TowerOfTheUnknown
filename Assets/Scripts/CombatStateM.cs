@@ -69,9 +69,15 @@ public class CombatStateM : MonoBehaviour
             playerSprites[i].SetActive(false);
         }
 
-        playerStats = GameObject.FindGameObjectWithTag("PlayerData").GetComponent<PlayerPrefab>().players;  // References the persistent list of player units
-        //Debug.Log("Found players");
-        enemyStats = GameObject.FindGameObjectWithTag("EnemyData").GetComponent<EnemyPrefab>().enemies;     // References the persistent list of enemy units
+        // References the persistent list of player units
+        playerStats = GameObject.FindGameObjectWithTag("PlayerData").GetComponent<PlayerPrefab>().players;  
+        
+        // References the persistent list of enemy units
+        enemyStats = GameObject.Find(GameObject.FindGameObjectWithTag("PlayerData").GetComponent<PlayerPrefab>().enemyName).GetComponent<EnemyPrefab>().enemies;
+
+        //To be used when testing
+        //enemyStats = GameObject.FindGameObjectWithTag("EnemyData").GetComponent<EnemyPrefab>().enemies;
+        
         //Debug.Log("Found enemies");
         //Debug.Log(enemyStats.Count);
 
