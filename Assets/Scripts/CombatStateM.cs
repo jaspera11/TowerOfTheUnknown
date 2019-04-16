@@ -38,6 +38,7 @@ public class CombatStateM : MonoBehaviour
     [SerializeField] private List<Button> itemButtons;
     [SerializeField] private List<Button> skillButtons1, skillButtons2, skillButtons3;
     [SerializeField] private Text playerHealth, playerStamina, enemyHealth, enemyStamina;
+    [SerializeField] private GameObject explosion, snowflake, flash, smoke;
     private List<List<Button>> skillButtons;
 
     /*
@@ -545,7 +546,7 @@ public class CombatStateM : MonoBehaviour
             return;
         }
 
-        GameObject skillParticle;
+        //GameObject skillParticle;
         Skill skill = stats.currSkills.Pop();       // Get the top skill and remove it from the stack
         stats.stamina -= skill.SPCost;              // Subtracts SPCost from unit's stamina
         switch (skill.type)
@@ -554,6 +555,9 @@ public class CombatStateM : MonoBehaviour
             case "Damage":
                 switch (skill.name)
                 {
+                    case "Name":
+                        //explosion.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        break;
                     //skillParticle = electricAttack;
                     //electricAttack.GetComponent<ParticleMotion>().PlaySkillAnim();
                 }

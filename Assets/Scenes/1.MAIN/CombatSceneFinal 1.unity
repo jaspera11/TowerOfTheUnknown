@@ -3170,6 +3170,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   battleScene: 1
+  enemyData: {fileID: 0}
 --- !u!65 &545022495
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5172,6 +5173,10 @@ MonoBehaviour:
   playerStamina: {fileID: 11192779}
   enemyHealth: {fileID: 1326855930}
   enemyStamina: {fileID: 1701420335}
+  explosion: {fileID: 0}
+  snowflake: {fileID: 0}
+  flash: {fileID: 0}
+  smoke: {fileID: 0}
 --- !u!1 &907193485
 GameObject:
   m_ObjectHideFlags: 0
@@ -5552,6 +5557,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   battleScene: 1
+  enemyData: {fileID: 0}
 --- !u!65 &958971704
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6009,7 +6015,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1021332536
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7396,7 +7402,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1349214038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9112,6 +9118,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   battleScene: 1
+  enemyData: {fileID: 0}
 --- !u!65 &1668492748
 BoxCollider:
   m_ObjectHideFlags: 0
