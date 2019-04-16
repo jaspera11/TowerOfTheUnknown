@@ -37,7 +37,7 @@ public class CombatStateM : MonoBehaviour
     [SerializeField] private Button attackButton, skillsButton, itemButton, fleeButton, skillChainButton1, skillChainButton2, skillChainButton3;
     [SerializeField] private List<Button> itemButtons;
     [SerializeField] private List<Button> skillButtons1, skillButtons2, skillButtons3;
-    [SerializeField] private Text playerHealth, playerStamina, enemyHealth, enemyStamina;
+    [SerializeField] private Text playerHealth, playerStamina, enemyHealth, enemyStamina, playername, enemyname;
     [SerializeField] private GameObject bexplosion, snowflake, wflash, smoke, wexplosion, electric, fire, rflash;
 
     private List<List<Button>> skillButtons;
@@ -75,10 +75,10 @@ public class CombatStateM : MonoBehaviour
         playerStats = GameObject.FindGameObjectWithTag("PlayerData").GetComponent<PlayerPrefab>().players;  
         
         // References the persistent list of enemy units
-        //enemyStats = GameObject.Find(GameObject.FindGameObjectWithTag("PlayerData").GetComponent<PlayerPrefab>().enemyName).GetComponent<EnemyPrefab>().enemies;
+        enemyStats = GameObject.Find(GameObject.FindGameObjectWithTag("PlayerData").GetComponent<PlayerPrefab>().enemyName).GetComponent<EnemyPrefab>().enemies;
 
         //To be used when testing
-        enemyStats = GameObject.FindGameObjectWithTag("EnemyData").GetComponent<EnemyPrefab>().enemies;
+        //enemyStats = GameObject.FindGameObjectWithTag("EnemyData").GetComponent<EnemyPrefab>().enemies;
         
         //Debug.Log("Found enemies");
         //Debug.Log(enemyStats.Count);
@@ -104,7 +104,7 @@ public class CombatStateM : MonoBehaviour
         mainCharDefeated = false;
         fleeAttempted = false;
         skillChainR = false;
-        battleLog.text = "\n\n\n\n\n";          // Ingenius way of creating a battle log (assumes ~7~ newline text limit)
+        battleLog.text = "\n\n\n\n\n\n\n\n\n\n";          // Ingenius way of creating a battle log (assumes ~7~ newline text limit)
         // Sets skills/item panels to inactive upon battle start
         foreach (GameObject panel in skillsPanels)
         {
@@ -168,7 +168,7 @@ public class CombatStateM : MonoBehaviour
                     // TODO: [ Implement UI stuff, decision making (choose move, skill, enemy, etc.), use playerStats[uIndex] ]
 
                     //PlayerStats player = playerStats[uIndex];
-
+                    Debug.Log(playerStats[uIndex].itemUsed);
                     itemButton.interactable = (playerStats[uIndex].itemUsed) ? false : true;    // itemUsed == true --> can't click on "Item"
                     skillChainButton1.interactable = (playerStats[uIndex].currSkills.Count > 0);
                     skillChainButton2.interactable = (playerStats[uIndex].currSkills.Count > 0);
@@ -185,9 +185,10 @@ public class CombatStateM : MonoBehaviour
                     // If current player doesn't have the skill/stamina to use a skill, can't click on that skill
                     // Skills in each player's skill list must have same index as skills in skill button lists!! ------------- fixable later?
                     //Debug.Log("Before skill button loop");
+                    Debug.Log(skillButtons[uIndex].Count);
                     for (int i = 0; i < skillButtons[uIndex].Count; i++)
                     {
-                        //Debug.Log(i);
+                        //fDebug.Log(i);
                         bool isInteractable = (playerStats[uIndex].skill >= playerStats[uIndex].skillList[i].skillReq)
                             && (playerStats[uIndex].stamina >= playerStats[uIndex].skillList[i].SPCost);
                         skillButtons[uIndex][i].interactable = (isInteractable) ? true : false;
@@ -230,7 +231,7 @@ public class CombatStateM : MonoBehaviour
                         playerStats[uIndex].currItem.name = "";
                         return;
                     }
-                    playerStats[uIndex].itemUsed = false;   // Reverts itemUsed after turn ends
+                       // Reverts itemUsed after turn ends
 
                     if (playerStats[uIndex].currOption == "Flee" && !fleeAttempted)
                     {
@@ -245,11 +246,27 @@ public class CombatStateM : MonoBehaviour
                     //Debug.Log(deciding);
                     if (!deciding)
                     {
+                        switch (uIndex)
+                        {
+                            case 0:
+                                playerSprites[uIndex].gameObject.GetComponent<Animator>().SetBool("playerCast", true);
+                                break;
+
+                            case 1:
+                                playerSprites[uIndex].gameObject.GetComponent<Animator>().SetBool("gabeGun", true);
+                                break;
+
+                            case 2:
+                                playerSprites[uIndex].gameObject.GetComponent<Animator>().SetBool("chadAttack", true);
+                                break;
+                        }
+
                         // Deactivates the skills/items panels for each player unit after their turn
                         foreach (GameObject panel in skillsPanels)
                         {
                             panel.SetActive(false);
                         }
+                        playerStats[uIndex].itemUsed = false;
                         itemPanel.SetActive(false);
                         skillChainR = false;
                         uIndex++;
@@ -305,8 +322,26 @@ public class CombatStateM : MonoBehaviour
                     {
                         currState = CombatState.Win;
                     }
-                    if (uIndex >= playerStats.Count)
+                    else if (uIndex >= playerStats.Count)
                     {
+                        for (uIndex = 0; uIndex < playerSprites.Count; uIndex++)
+                        {
+                            switch (uIndex)
+                            {
+                                case 0:
+                                    playerSprites[uIndex].gameObject.GetComponent<Animator>().SetBool("playerCast", false);
+                                    break;
+
+                                case 1:
+                                    playerSprites[uIndex].gameObject.GetComponent<Animator>().SetBool("gabeGun", false);
+                                    break;
+
+                                case 2:
+                                    playerSprites[uIndex].gameObject.GetComponent<Animator>().SetBool("chadAttack", false);
+                                    break;
+                            }
+                        }
+
                         currState = CombatState.EnemyPhase;
                         uIndex = 0;
                     }
@@ -426,9 +461,11 @@ public class CombatStateM : MonoBehaviour
             player_disp = playerStats[uIndex];
             playerHealth.text = player_disp.health.ToString() + " / " + player_disp.maxHealth.ToString();
             playerStamina.text = player_disp.stamina.ToString() + " / " + player_disp.maxStamina.ToString();
+            playername.text = player_disp.name;
             //Debug.Log(player_disp.charName);
             enemyHealth.text = player_disp.currEnemy.health.ToString() + " / " + player_disp.currEnemy.maxHealth.ToString();
             enemyStamina.text = player_disp.currEnemy.stamina.ToString() + " / " + player_disp.currEnemy.maxStamina.ToString();
+            enemyname.text = player_disp.currEnemy.name;
         }
         else
         {
@@ -437,6 +474,8 @@ public class CombatStateM : MonoBehaviour
             playerStamina.text = player_disp.stamina.ToString() + " / " + player_disp.maxStamina.ToString();
             enemyHealth.text = player_disp.currEnemy.health.ToString() + " / " + player_disp.currEnemy.maxHealth.ToString();
             enemyStamina.text = player_disp.currEnemy.stamina.ToString() + " / " + player_disp.currEnemy.maxStamina.ToString();
+            playername.text = player_disp.name;
+            enemyname.text = player_disp.currEnemy.name;
         }
 
     }
@@ -563,10 +602,10 @@ public class CombatStateM : MonoBehaviour
                 switch (skill.name)
                 {
                     case "Psy-Throw":
-                        wexplosion.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        wflash.GetComponent<ParticleMotion>().PlaySkillAnim();//wexplosion.GetComponent<ParticleMotion>().PlaySkillAnim();
                         break;
                     case "Tear":
-                        bexplosion.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        rflash.GetComponent<ParticleMotion>().PlaySkillAnim();//bexplosion.GetComponent<ParticleMotion>().PlaySkillAnim();
                         break;
                     case "Kinetic Flame":
                         fire.GetComponent<ParticleMotion>().PlaySkillAnim();
@@ -578,7 +617,7 @@ public class CombatStateM : MonoBehaviour
                         bexplosion.GetComponent<ParticleMotion>().PlaySkillAnim();
                         break;
                     case "Thrown Edge":
-                        wexplosion.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        wflash.GetComponent<ParticleMotion>().PlaySkillAnim();//wexplosion.GetComponent<ParticleMotion>().PlaySkillAnim();
                         break;
                     case "Mini Explosive":
                         wexplosion.GetComponent<ParticleMotion>().PlaySkillAnim();
@@ -590,22 +629,22 @@ public class CombatStateM : MonoBehaviour
                         snowflake.GetComponent<ParticleMotion>().PlaySkillAnim();
                         break;
                     case "Plasma Blaster":
-                        rflash.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        bexplosion.GetComponent<ParticleMotion>().PlaySkillAnim();//rflash.GetComponent<ParticleMotion>().PlaySkillAnim();
                         break;
-                    case "Straight Dive":
+                    case "Straight Drive":
                         wflash.GetComponent<ParticleMotion>().PlaySkillAnim();
                         break;
                     case "Rear Straight":
-                        bexplosion.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        wflash.GetComponent<ParticleMotion>().PlaySkillAnim(); //bexplosion.GetComponent<ParticleMotion>().PlaySkillAnim();
                         break;
                     case "Straight Overdrive":
-                        wflash.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        rflash.GetComponent<ParticleMotion>().PlaySkillAnim();//wflash.GetComponent<ParticleMotion>().PlaySkillAnim();
                         break;
                     case "Rear Overdrive":
-                        electric.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        rflash.GetComponent<ParticleMotion>().PlaySkillAnim();//electric.GetComponent<ParticleMotion>().PlaySkillAnim();
                         break;
                     case "Supersonic Thrash":
-                        rflash.GetComponent<ParticleMotion>().PlaySkillAnim();
+                        wexplosion.GetComponent<ParticleMotion>().PlaySkillAnim();//rflash.GetComponent<ParticleMotion>().PlaySkillAnim();
                         break;
                         //skillParticle = electricAttack;
                         //electricAttack.GetComponent<ParticleMotion>().PlaySkillAnim();
@@ -742,6 +781,7 @@ public class CombatStateM : MonoBehaviour
                 break;
         }
         stats.itemUsed = true;  // Player has used the item (cannot use it again until the next turn)
+        itemPanel.SetActive(false);
     }
 
     /* 
@@ -953,7 +993,7 @@ public class CombatStateM : MonoBehaviour
     {
         //EnemyStats = enemy;
         SetTarget();
-        AddBattleLog("The Enemy is Contemplating...");
+        //AddBattleLog("The Enemy is Contemplating...");
         //PlayerStats playerTarget = new PlayerStats();
 
         int[] rootWeights = { 30, 70 };

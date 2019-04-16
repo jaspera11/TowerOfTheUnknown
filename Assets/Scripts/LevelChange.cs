@@ -32,6 +32,7 @@ public class LevelChange : MonoBehaviour
             case "switches":
                 return activatedSwitches >= requiredSwitches;
             case "riddles":
+                Debug.Log("Riddles: " + solvedRiddles);
                 return PlayerPrefab.gameData.isDeadEnemy.ContainsKey(enemyName) && solvedRiddles >= requiredRiddles;
             default:
                 return true;

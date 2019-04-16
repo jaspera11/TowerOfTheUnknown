@@ -22,6 +22,7 @@ public class PlayerPhaseState : MonoBehaviour
     public Text chainconfirm1;
     public Text chainconfirm2;
     public Text chainconfirm3;
+    public List<Text> items;
     public string holder;
 
     private void Update()
@@ -83,6 +84,12 @@ public class PlayerPhaseState : MonoBehaviour
 
     public void ItemButton()
     {
+        int n = 0;
+        foreach (Text item in items)
+        {
+            item.text = PlayerPrefab.gameData.inventory[n].name + " x" + PlayerPrefab.gameData.inventory[n].count;
+            n++;
+        }
         PlayerStats player = stateMachine.playerStats[stateMachine.uIndex];
         if (stateMachine.currState != CombatStateM.CombatState.PlayerPhase)
             return;
@@ -92,14 +99,14 @@ public class PlayerPhaseState : MonoBehaviour
         currPanel.SetActive(!currPanel.activeSelf);
     }
 
-    public void SetItem(int index, Text itemText)
+    public void SetItem(int index)
     {
         PlayerStats player = stateMachine.playerStats[stateMachine.uIndex];
         Item item = PlayerPrefab.gameData.inventory[index];
         player.currItem = item;
         item = PlayerPrefab.gameData.inventory[index] = new Item(item.name, item.count - 1);
         stateMachine.AddBattleLog(player.charName + " used item " + item.name + "!");
-        itemText.text = item.name + " x" + item.count;
+        //itemText.text = item.name + " x" + item.count;
     }
 
     public void FleeButton()
@@ -122,11 +129,116 @@ public class PlayerPhaseState : MonoBehaviour
         holder = stateMachine.battleLog.text;
         PlayerStats player = stateMachine.playerStats[stateMachine.uIndex];
         Skill skill = player.skillList[index];
+        stateMachine.battleLog.fontSize = 120;
         stateMachine.battleLog.text = skill.name + ": \n" + "PWR: " + skill.power + " SP: " + skill.SPCost;
+        switch (skill.name)
+        {
+            case "Psy-Throw":
+                stateMachine.battleLog.text += "\nUses the power of telekinesis to jostle the enemy. A simple and weak attack.";
+                break;
+            case "Tear":
+                stateMachine.battleLog.text += "\nUses the power of telekinesis to pull the enemy apart. A more advanced and powerful attack";
+                break;
+            case "Kinetic Flame":
+                stateMachine.battleLog.text += "\nUses the power of telekinesis to create flames that are directed at enemies.";
+                break;
+            case "Kinetic Shock":
+                stateMachine.battleLog.text += "\nUses the power of telekinesis to create a sphere of electricity.";
+                break;
+            case "Psy-Blast":
+                stateMachine.battleLog.text += "\nA powerful concussive blast of psychic energy.";
+                break;
+            case "Thrown Edge":
+                stateMachine.battleLog.text += "\nA thrown blade. Though weak it does catch enemies by surprise.";
+                break;
+            case "Mini Explosive":
+                stateMachine.battleLog.text += "\nA tiny explosive that can be thrown at enemies.";
+                break;
+            case "Poisoned Smoke":
+                stateMachine.battleLog.text += "\nThrow a canister of poisonous gas the corrodes away at those exposed to it.";
+                break;
+            case "Freezing Spray":
+                stateMachine.battleLog.text += "\nA blast of freezing chill fire from a teched out gun.";
+                break;
+            case "Plasma Blaster":
+                stateMachine.battleLog.text += "\nAn explosive plasma blast fired from teched out gun.";
+                break;
+            case "Straight Drive":
+                stateMachine.battleLog.text += "\nA straight tackle performed at exceptional speeds";
+                break;
+            case "Rear Straight":
+                stateMachine.battleLog.text += "\nA take down performed from behind at exceptional speeds";
+                break;
+            case "Straight Overdrive":
+                stateMachine.battleLog.text += "\nA devastating superspeed tackle.";
+                break;
+            case "Rear Overdrive":
+                stateMachine.battleLog.text += "\nA devastating superspeed rear takedown.";
+                break;
+            case "Supersonic Thrash":
+                stateMachine.battleLog.text += "\nA barrage of powerful attacks at supersonic speeds.";
+                break;
+            case "Barrier":
+                stateMachine.battleLog.text += "\nA protective shield created using telekinesis. Raises the party's defense.";
+                break;
+            case "Magnify":
+                stateMachine.battleLog.text += "\nForce amplification using telekinesis. Increase the party's attack.";
+                break;
+            case "Gravity":
+                stateMachine.battleLog.text += "\nArtificially increased gravity that restricts the enemy. Decreases the enemy team's defense";
+                break;
+            case "Bio-Drug":
+                stateMachine.battleLog.text += "\nA top secret drug that accelerates healing. Recovers health for the whole team.";
+                break;
+            case "Smoke Bomb":
+                stateMachine.battleLog.text += "\nA smoke grenade for diversions. Decreases the enemy team's critical chance";
+                break;
+            case "Flash":
+                stateMachine.battleLog.text += "\nA bright light that disorients the enemy team decreasing their attack power.";
+                break;
+            case "Superspeed Guard":
+                stateMachine.battleLog.text += "\nSuperspeed observation and reaction. Increases party's defense and decreases the enemys' attack.";
+                break;
+            case "Acceleration":
+                stateMachine.battleLog.text += "\nShare the power of superspeed with allies. Increases the party's speed.";
+                break;
+            case "Speed Mirage":
+                stateMachine.battleLog.text += "\nCreate illusions through movement faster than the eye can process. Increases party's crit chance and decreases enemies crit chance.";
+                break;
+            default:
+                break;
+        }
     }
     public void ptrexit()
     {
+        stateMachine.battleLog.fontSize = 60;
         stateMachine.battleLog.text = holder;
+    }
+    public void itemptrenter(int index)
+    {
+        holder = stateMachine.battleLog.text;
+        stateMachine.battleLog.fontSize = 120;
+        switch (PlayerPrefab.gameData.inventory[index].name)
+        {
+            case "Heal":
+                stateMachine.battleLog.text = "Recovers health completely. Use wisely.";
+                break;
+            case "Energy":
+                stateMachine.battleLog.text = "Recovers some stamina.";
+                break;
+            case "Atk Boost":
+                stateMachine.battleLog.text = "Enhances physique increasing attack power";
+                break;
+            case "Def Boost":
+                stateMachine.battleLog.text = "Enhances physique increasing durability";
+                break;
+            case "Spd Boost":
+                stateMachine.battleLog.text = "Enhances physique enhancing speed";
+                break;
+            case "Crit Boost":
+                stateMachine.battleLog.text = "A strange item that can increase a person's luck";
+                break;
+        }
     }
 
 }

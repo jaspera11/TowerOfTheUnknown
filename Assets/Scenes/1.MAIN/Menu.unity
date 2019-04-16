@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.022403134, g: 0.036430173, b: 0.07919187, a: 1}
+  m_IndirectSpecularColor: {r: 0.02240311, g: 0.036430154, b: 0.07919175, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1293,7 +1293,19 @@ MonoBehaviour:
   - {fileID: 866603320}
   prevSceneIndex: 0
   playerLocation: {fileID: 0}
-  inventory: []
+  inventory:
+  - name: Heal
+    count: 5
+  - name: Energy
+    count: 5
+  - name: Atk Boost
+    count: 1
+  - name: Def Boost
+    count: 1
+  - name: Spd Boost
+    count: 1
+  - name: Crit Boost
+    count: 1
   enemyName: 
 --- !u!4 &1730638475
 Transform:

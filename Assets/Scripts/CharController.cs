@@ -43,6 +43,7 @@ public class CharController : MonoBehaviour
             obj = other.transform;
             move = playerCon ? obj : transform;
             playerCon = !playerCon;
+            animator.SetBool("playerCast", true);
             //animator.SetBool("isFront", true);
         }
     }
@@ -76,6 +77,7 @@ public class CharController : MonoBehaviour
         {
             playerCon = true;
             move = transform;
+            animator.SetBool("playerCast", false);
         }
 
         if ((Input.GetKeyDown("left") || Input.GetKeyDown("a")) && facingRight)

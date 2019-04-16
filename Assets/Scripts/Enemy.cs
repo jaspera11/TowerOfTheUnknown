@@ -30,6 +30,8 @@ public class Enemy : MonoBehaviour
         // approaches a destination point).
         agent.autoBraking = false;
 
+        
+
         GotoNextPoint();
     }
 
@@ -39,6 +41,8 @@ public class Enemy : MonoBehaviour
         {
             //PlayerPrefab.gameData.prevSceneIndex = SceneManager.GetActiveScene().buildIndex;    // Saves the previous scene
             //PlayerPrefab.gameData.playerLocation = other.transform;                             // Saves player position in overworld
+            PlayerPrefab.gameData.prevSceneIndex = SceneManager.GetActiveScene().buildIndex;    // Saves the previous scene
+            PlayerPrefab.gameData.playerLocation = other.transform;                             // Saves player position in overworld
             Debug.Log("Collided with player");
             GameObject.Find("Players").GetComponent<PlayerPrefab>().enemyName = enemyData.name;
             SceneManager.LoadScene(battleScene);                                                // Load battle scene
@@ -62,6 +66,11 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (enemyData == null)
+        {
+            Destroy(gameObject);
+        }
+
         if (!agent.pathPending && agent.remainingDistance < 0.5f)
             GotoNextPoint();
     }

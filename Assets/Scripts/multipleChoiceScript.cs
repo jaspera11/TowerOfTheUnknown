@@ -6,35 +6,23 @@ using UnityEngine.UI;
 public class multipleChoiceScript : MonoBehaviour
 {
     public GameObject TextBox;
-    public GameObject Choice01;
-    public GameObject Choice02;
-    public GameObject Choice03;
-    public int ChoiceMade;
+    public GameObject exit;
 
-    public void ChoiceOption1() {
-        TextBox.GetComponent<Text>().text = "Wrong answer!";
-        ChoiceMade = 1;
-    }
-
-
-    public void ChoiceOption2()
+    public void Evaluator(bool isAnswer)
     {
-        TextBox.GetComponent<Text>().text = "Correct!";
-        ChoiceMade = 2;
+        if (isAnswer)
+        {
+            TextBox.GetComponent<Text>().text = "Correct!";
+            exit.GetComponent<LevelChange>().IncrementSolvedRiddles();
+        }
+        else
+        {
+            TextBox.GetComponent<Text>().text = "Wrong answer!";
+            // [ Maybe some punishment ]
+        }
     }
 
-    public void ChoiceOption3()
-    {
-        TextBox.GetComponent<Text>().text = "Wrong answer!";
-        ChoiceMade = 3;
-    }
-
-
-
-
-
-
-
+    /*
     void Update()
     {
         if (ChoiceMade >=1){
@@ -44,4 +32,5 @@ public class multipleChoiceScript : MonoBehaviour
         }
         
     }
+    */
 }
