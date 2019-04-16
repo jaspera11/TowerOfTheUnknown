@@ -7,7 +7,7 @@ public class LevelChange : MonoBehaviour
 {
     public int sceneIndex;
     public int requiredSwitches;
-    private int activatedSwitches = 0;
+    public int activatedSwitches = 0;
 
     public void incrementActiveSwitches()
     {
