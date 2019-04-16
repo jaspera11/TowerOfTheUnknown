@@ -12,7 +12,17 @@ public class LevelChange : MonoBehaviour
 
     // Depends on condition
     public int requiredSwitches = 1;
-    private int activatedSwitches = 0;
+    public int activatedSwitches = 0;
+
+    public GameObject enemyPrefab;
+    private string enemyName;
+    public int requiredRiddles = 2;
+    public int solvedRiddles = 0;
+
+    void Start()
+    {
+        enemyName = enemyPrefab.name;
+    }
 
     // Also depends on condition
     private bool ChangeCondition(string condition)
@@ -21,6 +31,8 @@ public class LevelChange : MonoBehaviour
         {
             case "switches":
                 return activatedSwitches >= requiredSwitches;
+            case "riddles":
+                return PlayerPrefab.gameData.isDeadEnemy.ContainsKey(enemyName) && solvedRiddles >= requiredRiddles;
             default:
                 return true;
         }
@@ -47,4 +59,6 @@ public class LevelChange : MonoBehaviour
     // Increment/decrement activated switches
     public void IncrementActiveSwitches() { activatedSwitches++; }
     public void DecrementActiveSwitches() { activatedSwitches--; }
+
+    public void IncrementSolvedRiddles() { solvedRiddles++; }
 }

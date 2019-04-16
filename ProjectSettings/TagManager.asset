@@ -18,6 +18,8 @@ TagManager:
   - LevelChange
   - Movable
   - Moveable
+  - EnemyData
+  - PlayerData
   layers:
   - Default
   - TransparentFX
