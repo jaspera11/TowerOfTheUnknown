@@ -39,11 +39,12 @@ public class CharController : MonoBehaviour
     {
         if (Input.GetKeyDown("space") && other.tag == "Moveable")
         {
-            // Debug.Log(move.name + " " + playerCon);
+            
             obj = other.transform;
-            move = playerCon ? obj : transform;
-            playerCon = !playerCon;
+            move = obj;
+            playerCon = false;
             animator.SetBool("playerCast", true);
+            Debug.Log(move.name + " " + playerCon);
             //animator.SetBool("isFront", true);
         }
     }
