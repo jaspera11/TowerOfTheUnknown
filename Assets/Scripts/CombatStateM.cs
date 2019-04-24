@@ -425,8 +425,8 @@ public class CombatStateM : MonoBehaviour
                 {
                     player.stamina = player.maxStamina;
                 }
-                PlayerPrefab.gameData.isDeadEnemy[GameObject.FindGameObjectWithTag("EnemyData").name] = true;   // Enemy prefab object added to dead enemies list
-                Destroy(GameObject.FindGameObjectWithTag("EnemyData"));                                         // Destroys enemy prefab (stays dead)
+                PlayerPrefab.gameData.isDeadEnemy[GameObject.Find(GameObject.FindGameObjectWithTag("PlayerData").GetComponent<PlayerPrefab>().enemyName).name] = true;   // Enemy prefab object added to dead enemies list
+                Destroy(GameObject.Find(GameObject.FindGameObjectWithTag("PlayerData").GetComponent<PlayerPrefab>().enemyName));                                         // Destroys enemy prefab (stays dead)
                 SceneManager.LoadScene(PlayerPrefab.gameData.prevSceneIndex);                                   // Load previous scene
                 break;
 
@@ -435,7 +435,7 @@ public class CombatStateM : MonoBehaviour
                 // TODO: [ Do defeat animation ]
                 // TODO: [ Load game over screen - start over or from last save]
                 AddBattleLog("You lose!");
-                Destroy(GameObject.FindGameObjectWithTag("EnemyData"));     // Destroys enemy prefab (comes back)
+                Destroy(GameObject.Find(GameObject.FindGameObjectWithTag("PlayerData").GetComponent<PlayerPrefab>().enemyName));     // Destroys enemy prefab (comes back)
                 SceneManager.LoadScene(0);                                  // Game over scene
                 break;
             default:
@@ -456,27 +456,35 @@ public class CombatStateM : MonoBehaviour
         //Debug.Log(player_disp.currEnemy.health.ToString());
         //Debug.Log(player_disp.currEnemy.);
         UnitStats player_disp;
-        if (playerp)
-        {
-            player_disp = playerStats[uIndex];
-            playerHealth.text = player_disp.health.ToString() + " / " + player_disp.maxHealth.ToString();
-            playerStamina.text = player_disp.stamina.ToString() + " / " + player_disp.maxStamina.ToString();
-            playername.text = player_disp.name;
-            //Debug.Log(player_disp.charName);
-            enemyHealth.text = player_disp.currEnemy.health.ToString() + " / " + player_disp.currEnemy.maxHealth.ToString();
-            enemyStamina.text = player_disp.currEnemy.stamina.ToString() + " / " + player_disp.currEnemy.maxStamina.ToString();
-            enemyname.text = player_disp.currEnemy.name;
-        }
-        else
-        {
-            player_disp = playerStats[0];
-            playerHealth.text = player_disp.health.ToString() + " / " + player_disp.maxHealth.ToString();
-            playerStamina.text = player_disp.stamina.ToString() + " / " + player_disp.maxStamina.ToString();
-            enemyHealth.text = player_disp.currEnemy.health.ToString() + " / " + player_disp.currEnemy.maxHealth.ToString();
-            enemyStamina.text = player_disp.currEnemy.stamina.ToString() + " / " + player_disp.currEnemy.maxStamina.ToString();
-            playername.text = player_disp.name;
-            enemyname.text = player_disp.currEnemy.name;
-        }
+        player_disp = playerp ? playerStats[uIndex] : playerStats[0];
+        //if (playerp)
+        //{
+        //    player_disp = playerStats[uIndex];
+        //    //playerHealth.text = player_disp.health.ToString() + " / " + player_disp.maxHealth.ToString();
+        //    //playerStamina.text = player_disp.stamina.ToString() + " / " + player_disp.maxStamina.ToString();
+        //    //playername.text = player_disp.name;
+        //    ////Debug.Log(player_disp.charName);
+        //    //enemyHealth.text = player_disp.currEnemy.health.ToString() + " / " + player_disp.currEnemy.maxHealth.ToString();
+        //    //enemyStamina.text = player_disp.currEnemy.stamina.ToString() + " / " + player_disp.currEnemy.maxStamina.ToString();
+        //    //enemyname.text = player_disp.currEnemy.name;
+        //}
+        //else
+        //{
+        //    player_disp = playerStats[0];
+        //    //playerHealth.text = player_disp.health.ToString() + " / " + player_disp.maxHealth.ToString();
+        //    //playerStamina.text = player_disp.stamina.ToString() + " / " + player_disp.maxStamina.ToString();
+        //    //enemyHealth.text = player_disp.currEnemy.health.ToString() + " / " + player_disp.currEnemy.maxHealth.ToString();
+        //    //enemyStamina.text = player_disp.currEnemy.stamina.ToString() + " / " + player_disp.currEnemy.maxStamina.ToString();
+        //    //playername.text = player_disp.name;
+        //    //enemyname.text = player_disp.currEnemy.name;
+        //}
+
+        playerHealth.text = player_disp.health.ToString() + " / " + player_disp.maxHealth.ToString();
+        playerStamina.text = player_disp.stamina.ToString() + " / " + player_disp.maxStamina.ToString();
+        enemyHealth.text = player_disp.currEnemy.health.ToString() + " / " + player_disp.currEnemy.maxHealth.ToString();
+        enemyStamina.text = player_disp.currEnemy.stamina.ToString() + " / " + player_disp.currEnemy.maxStamina.ToString();
+        playername.text = player_disp.name;
+        enemyname.text = player_disp.currEnemy.name;
 
     }
 
